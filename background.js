@@ -1,8 +1,8 @@
 console.log("back.js");
 
 var isPlaying = false;
-var isNewAudio = false;
-var active_audio ='',
+var isNewAudio = true;
+var activeAudio ='';
 var audioList = [
   {
     audioTitle: "Zain AlAbedeen",
@@ -18,6 +18,11 @@ var audioList = [
     audioTitle: "Abdulrazzak 2",
     audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
     audioId: "id-abd2"
+  },
+  {
+    audioTitle: "Water drop",
+    audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
+    audioId: "id-water"
   }
 ];
 
@@ -34,20 +39,37 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
   else if (request.user_action == "playPause") {
 
-    // alert('playPause');
-    if (active_audio == request.audio_url) {
+    // alert(activeAudio == request.audio_url
+    // check if the recusted audio is new or not
+    if (activeAudio == request.audio_url) {
+      isNewAudio = false;
+    } else {
       isNewAudio = true;
     }
-    if (isPlaying && isNewAudio) {
-         isPlaying = !isPlaying;
-         l.pause();  // Stop playing
-         // a.currentTime = 0;  // Go to to second no. Zero (start of the file)
-       } else {
-         active_audio = request.audio_url;
-         isPlaying = !isPlaying;
-         l.src = request.audio_url;
-         l.play();
-       };
+
+    //check if audio is finished take it back to start
+    if (l.currentTime == l.duration){
+      l.currentTime = 0;
+      isPlaying = !isPlaying;
+    }
+
+    //check if the requsetd audio is new(not paused track), 
+    //if you remove this the audio file start from 0 even it pased.
+    if ((activeAudio != l.src) || (l.src != request.audio_url) ){
+      l.src = request.audio_url;
+    }
+
+    if ((isPlaying && !isNewAudio)) {
+          // alert("pause");
+          isPlaying = !isPlaying;
+          l.pause();  // Stop playing
+        // l.currentTime = 0;  // Go to to second no. Zero (start of the file)
+        } else {
+          activeAudio = request.audio_url;
+          isPlaying = !isPlaying;
+          // l.src = request.audio_url;
+          l.play();
+        };
   }
 });
 

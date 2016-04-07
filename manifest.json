@@ -1,7 +1,7 @@
 {
   "name": "Trevx",
   "version": "0.2",
-  "description": "play & pause, view list of audio links",
+  "description": "Welcome to Trevx, The leading audio search engine in the world, The place you can find, play and download any audio file on the web",
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "js": ["popup.js"]
@@ -12,8 +12,17 @@
 
   "browser_action": {
     "default_title": "communicate with background",
+    "default_popup": "popup.html",
+    "default_icon": "icon.png",
     "default_popup": "popup.html"
   },
+  "icons": {
+    "16" : "64.png",
+    "48" : "64.png",
+    "64" : "64.png",
+    "128" : "64.png"
+  },
+  
   "permissions": [
     "activeTab",
     "storage"
