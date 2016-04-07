@@ -3,31 +3,13 @@ console.log("back.js");
 var isPlaying = false;
 var isNewAudio = true;
 var activeAudio ='';
-var audioList = [
-  {
-    audioTitle: "Zain AlAbedeen",
-    audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-    audioId: "id-zain"
-  },
-  {
-    audioTitle: "Abdulrazzak",
-    audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-    audioId: "id-abd"
-  },
-  {
-    audioTitle: "Abdulrazzak 2",
-    audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-    audioId: "id-abd2"
-  },
-  {
-    audioTitle: "Water drop",
-    audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-    audioId: "id-water"
-  }
-];
-
-
 var l = new Audio();
+var audioList = [];
+
+
+chrome.storage.sync.get("audioList", function(data) {
+    audioList = data["audioList"];
+  });
 
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -53,7 +35,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       isPlaying = !isPlaying;
     }
 
-    //check if the requsetd audio is new(not paused track), 
+    //check if the requsetd audio is new(not paused track),
     //if you remove this the audio file start from 0 even it pased.
     if ((activeAudio != l.src) || (l.src != request.audio_url) ){
       l.src = request.audio_url;
@@ -137,3 +119,27 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //       console.log("getList");
 //       sendResponse({audioList: audioList});
 //     );
+
+
+// var audioList = [
+//   {
+//     audioTitle: "Zain AlAbedeen",
+//     audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
+//     audioId: "id-zain"
+//   },
+//   {
+//     audioTitle: "Abdulrazzak",
+//     audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+//     audioId: "id-abd"
+//   },
+//   {
+//     audioTitle: "Abdulrazzak 2",
+//     audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+//     audioId: "id-abd2"
+//   },
+//   {
+//     audioTitle: "Water drop",
+//     audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
+//     audioId: "id-water"
+//   }
+// ];
