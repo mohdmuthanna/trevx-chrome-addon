@@ -6,7 +6,8 @@ if (container) {
   function createAudioLine(audioList){
     var links = '';
     for (var i = 0; i < audioList.length; i++) {
-      links += "<br><a class='line' id='"+audioList[i].audioId+"' href='"+audioList[i].audioUrl+"'>"+ audioList[i].audioTitle+"</a><br>";
+      links += "<br><a class='line' id='"+audioList[i].audioId+"' href='"+audioList[i].audioUrl+"'>"+ audioList[i].audioTitle+"</a>"
+                +"  " + "<a href='"+audioList[i].audioUrl+"' class='download'>Download<br>";
     }
 
     return (links);
@@ -19,6 +20,13 @@ if (container) {
       }, function(response) {
         // document.getElementById("play-pause").innerHTML = response.msg;
       });
+  }
+
+  function download(target) {
+    chrome.runtime.sendMessage({
+        user_action: "download",
+        audio_url: target.href
+    });
   }
 
   window.onload = function() {
@@ -37,48 +45,23 @@ if (container) {
         // document.body.innerHTML = createAudioLine(response.audioList) + document.body.innerHTML;
 
         container.innerHTML = createAudioLine(response.audioList);
-
-        // $('a').click(function(){
-        //     alert($(this).id());
-        // });
         var audioLinks = document.querySelectorAll('.line');
+        var downloadLinks = document.querySelectorAll('.download');
 
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
-                // if (!confirm("sure u want to delete " + this.title)) {
-                // }
                 playPause(this);
             });
         }
-        // var links = document.querySelectorAll('a');
-        // document.querySelector("#id-abd").onclick = function(e) {
-        //   // alert(links[0].click());
-        //   // alert(this.dataset.index);
-        //   playPause();
-        // };
 
-        // playPause();
-        // document.body.innerHTML = createAudioLine(response.audioList) + document.body.innerHTML;
-        // document.getElementById("get-list").textContent = ;
-        // var e = document.createElement('div');
-        // e.innerHTML = "555555555555555555";
+        for (var i = 0; i < downloadLinks.length; i++) {
+            downloadLinks[i].addEventListener('click', function(event) {
+                download(this);
+            });
+        }
+
+
+
       });
   }
-  //
-  // chrome.browserAction.onClicked
-  // document.getElementById('a').onclick = function(e){
-  //   playPause();
-  // }
-
-
-  // chrome.tabs.onUpdated.addListener
-  // chrome.browserAction.onClicked.addListener
-
-  // document.addEventListener('DOMContentLoaded', function () {
-  //      document.querySelector('a').addEventListener('click', showalert, false);
-  // }, false);
-
-  // function showalert() {
-  //     alert("you just pressed the button");
-  // }
-}
+} // end of container

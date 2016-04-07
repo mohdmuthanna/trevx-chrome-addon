@@ -19,6 +19,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         audioList: audioList
     });
   }
+  else if (request.user_action == "download") {
+    window.open(request.audio_url,"_blank");
+  }
   else if (request.user_action == "playPause") {
 
     // alert(activeAudio == request.audio_url
