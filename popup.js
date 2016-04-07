@@ -4,11 +4,8 @@ if (container) {
   console.log("Start popup.js");
 
   function createAudioLine(audioList){
-    //  alert(audioList[0]);
     var links = '';
     for (var i = 0; i < audioList.length; i++) {
-      // alert([i]);
-
       links += "<br><a class='line' id='"+audioList[i].audioId+"' href='"+audioList[i].audioUrl+"'>"+ audioList[i].audioTitle+"</a><br>";
     }
 
@@ -49,9 +46,7 @@ if (container) {
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
                 // if (!confirm("sure u want to delete " + this.title)) {
-                //     event.preventDefault();
                 // }
-                // alert(this);
                 playPause(this);
             });
         }

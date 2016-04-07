@@ -1,6 +1,8 @@
 console.log("back.js");
 
 var isPlaying = false;
+var isNewAudio = false;
+var active_audio ='',
 var audioList = [
   {
     audioTitle: "Zain AlAbedeen",
@@ -21,14 +23,7 @@ var audioList = [
 
 
 var l = new Audio();
-// l.src = 'http://www.aldwaihi.com/ram/7nadm2.mp3';
 
-// chrome.runtime.onMessage.addListener(
-//   function(request, sender, sendResponse)
-//     if (request.user_action == "getList")
-//       console.log("getList");
-//       sendResponse({audioList: audioList});
-//     );
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getList") {
@@ -38,18 +33,29 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
   }
   else if (request.user_action == "playPause") {
+
     // alert('playPause');
-    if (isPlaying) {
+    if (active_audio == request.audio_url) {
+      isNewAudio = true;
+    }
+    if (isPlaying && isNewAudio) {
          isPlaying = !isPlaying;
          l.pause();  // Stop playing
          // a.currentTime = 0;  // Go to to second no. Zero (start of the file)
        } else {
+         active_audio = request.audio_url;
          isPlaying = !isPlaying;
          l.src = request.audio_url;
          l.play();
        };
   }
 });
+
+
+
+
+
+
 
 
 // chrome.runtime.onMessage.addListener(
@@ -100,3 +106,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //         msg: "goodbye!"
 //       });
 //   });
+
+// l.src = 'http://www.aldwaihi.com/ram/7nadm2.mp3';
+
+// chrome.runtime.onMessage.addListener(
+//   function(request, sender, sendResponse)
+//     if (request.user_action == "getList")
+//       console.log("getList");
+//       sendResponse({audioList: audioList});
+//     );
