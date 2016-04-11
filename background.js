@@ -4,11 +4,80 @@ var isPlaying = false;
 var isNewAudio = true;
 var activeAudio ='';
 var l = new Audio();
-var audioList = [];
+var searchResultList = [];
 
 
-chrome.storage.sync.get("audioList", function(data) {
-    audioList = data["audioList"];
+var playLists = [
+  {
+    playListTitle: "Road Music",
+    playListId: "id-road",
+    content: [
+        {
+          audioTitle: "Zain AlAbedeen LP",
+          audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
+          audioId: "id-zain"
+        },
+        {
+          audioTitle: "Abdulrazzak PL",
+          audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+          audioId: "id-abd"
+        },
+        {
+          audioTitle: "Abdulrazzak 2 PL",
+          audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+          audioId: "id-abd2"
+        }
+    ],
+
+
+  },
+  {
+    playListTitle: "Study Music",
+    playListId: "id-study",
+    content: [
+        {
+          audioTitle: "Zain AlAbedeen LP2",
+          audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
+          audioId: "id-zain"
+        },
+        {
+          audioTitle: "Abdulrazzak PL2",
+          audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+          audioId: "id-abd"
+        },
+        {
+          audioTitle: "Abdulrazzak 2 PL2",
+          audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+          audioId: "id-abd2"
+        }
+    ]
+  }
+];
+
+
+function getPlayListById(id){
+  for (var i = 0; i < playLists.length; i++) {
+    // alert(playLists[i]);
+    if (playLists[i].playListId == id){
+      return playLists[i];
+    }
+  }
+} // end of getPlayListById
+
+
+// alert(playList[0].content[1].audioTitle);
+
+// var playList = [
+//   "list0":{""}
+//
+//   [1,2,3],
+//   [3,4,5]
+// ];
+
+
+
+chrome.storage.sync.get("searchResultList", function(data) {
+    searchResultList = data["searchResultList"];
   });
 
 
@@ -16,7 +85,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getList") {
     // alert('getList');
     sendResponse({
-        audioList: audioList
+        searchResultList: searchResultList
+    });
+  }
+  else if (request.user_action == "getPlayList") {
+    playListTitle = request.play_list_id;
+    playList = getPlayListById(playListTitle);
+    sendResponse({
+        playList: playList
     });
   }
   else if (request.user_action == "download") {
@@ -70,7 +146,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 // switch (user_action)
 //             {
 //                case 'getList': sendResponse({
-//                    audioList: audioList
+//                    searchResultList: searchResultList
 //                  });
 //                break;
 //
@@ -120,11 +196,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //   function(request, sender, sendResponse)
 //     if (request.user_action == "getList")
 //       console.log("getList");
-//       sendResponse({audioList: audioList});
+//       sendResponse({searchResultList: searchResultList});
 //     );
 
 
-// var audioList = [
+
+// var searchResultList = [
 //   {
 //     audioTitle: "Zain AlAbedeen",
 //     audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
@@ -146,3 +223,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //     audioId: "id-water"
 //   }
 // ];
+//
+// chrome.storage.sync.set({'searchResultList': searchResultList}, function() {
+//         });

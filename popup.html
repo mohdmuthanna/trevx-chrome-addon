@@ -2,13 +2,32 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <link href="css/setting.css" rel="stylesheet" type="text/css">
   </head>
   <body>
+    <style media="screen">
+      body{
+        width: 300px;
+      }
+      #trevx-get-list-result{
+        margin-top: -10px;
+        margin-bottom: 30px;
+      }
+      #trevx-get-play-list{
 
-    <p> Welcome to Trevx </p>
-    <div id='trevx-get-list-result'>
+      }
+    </style>
+
+    <h4> Welcome to Trevx</h4>
+    <div id="trevx-when-popup-opened">
+      <h5>Search Result</h5>
+      <div id='trevx-get-list-result'></div>
+
+      <h5>My PlayList</h5>
+      <div id='trevx-get-play-list'></div>
     </div>
+    
+
     <script type="text/javascript" src="popup.js"></script>
   </body>
 </html>
