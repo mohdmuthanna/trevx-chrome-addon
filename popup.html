@@ -3,30 +3,33 @@
   <head>
     <meta charset="utf-8">
     <link href="css/setting.css" rel="stylesheet" type="text/css">
+
+    </style>
   </head>
   <body>
-    <style media="screen">
-      body{
-        width: 300px;
-      }
-      #trevx-get-list-result{
-        margin-top: -10px;
-        margin-bottom: 30px;
-      }
-      #trevx-get-play-list{
 
-      }
-    </style>
+    <div class="trevx-when-popup-opened">
+      <div class="search"> <img src="images/logo.png" alt="logo" width="64" height="20">
+        <input type="text" placeholder="Start by typing song name, artist name or any audio content">
+        <input type="submit" value="Search">
+      </div>
+      <ul>
+        <div id='trevx-search-result-list'>
 
-    <h4> Welcome to Trevx</h4>
+      </div>
+      </ul>
+      
+    </div>
+
+    <!--
     <div id="trevx-when-popup-opened">
       <h5>Search Result</h5>
-      <div id='trevx-get-list-result'></div>
+      <div id='trevx-search-result-list'></div>
 
       <h5>My PlayList</h5>
       <div id='trevx-get-play-list'></div>
     </div>
-    
+-->
 
     <script type="text/javascript" src="popup.js"></script>
   </body>

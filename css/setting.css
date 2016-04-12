@@ -1,18 +1,18 @@
-.wrapper {
+.trevx-when-popup-opened {
 	width: 550px;
 	border: 2px solid #dd4433;
 	background-color: #fff;
 }
-.wrapper .search {
+.trevx-when-popup-opened .search {
 	overflow: hidden;
 	padding: 5px;
 	background-color: #dd4433;
 }
-.wrapper .search img {
+.trevx-when-popup-opened .search img {
 	float: left;
 	margin: 3px 10px 0 0;
 }
-.wrapper .search input[type='text'] {
+.trevx-when-popup-opened .search input[type='text'] {
 	width: 400px;
 	height: 30px;
 	float: left;
@@ -26,7 +26,7 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.wrapper .search input[type='submit'] {
+.trevx-when-popup-opened .search input[type='submit'] {
 	width: 60px;
 	height: 30px;
 	float: right;
@@ -47,42 +47,42 @@
 	-webkit-appearance: none;
 	appearance: none;
 }
-.wrapper ul {
+.trevx-when-popup-opened ul {
 	max-height: 420px;
 	overflow: auto;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
-.wrapper ul li {
+.trevx-when-popup-opened ul li {
 	overflow: hidden;
 	padding: 10px;
 	border-bottom: 1px solid #dedede;
 }
-.wrapper ul li:hover {
+.trevx-when-popup-opened ul li:hover {
 	background-color: #ededed;
 }
-.wrapper ul li a {
+.trevx-when-popup-opened ul li a {
 	color: #666;
 	text-decoration: none;
 }
-.wrapper ul li a.action {
+.trevx-when-popup-opened ul li a.action {
 	width: 50px;
 	height: 50px;
 	float: left;
 	margin-right: 10px;
 }
-.wrapper ul li a.play {
+.trevx-when-popup-opened ul li a.play {
 	background: url(../images/icons.png) no-repeat 1px -45px;
 }
-.wrapper ul li a.pause {
+.trevx-when-popup-opened ul li a.pause {
 	background: url(../images/icons.png) no-repeat 1px -102px;
 }
-.wrapper ul li a.title {
+.trevx-when-popup-opened ul li a.title {
 	width: 400px;
 	float: left;
 }
-.wrapper ul li a.download {
+.trevx-when-popup-opened ul li a.download {
 	width: 32px;
 	height: 32px;
 	float: right;

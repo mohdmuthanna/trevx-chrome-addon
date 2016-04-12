@@ -8,5 +8,7 @@ Chrome extension with app experience, This extension enables you to use [trevx.c
 Trevx is audio search engine, The place that you can find, play and download any audio file on the web".
 
 **Developer**
-[Mohammed Muthanna](http://mohd.im)
-[Github](https://github.com/mohdmuthanna)
+[Mohammed Muthanna](http://mohd.im) ---- [Github](https://github.com/mohdmuthanna)
+
+**UI Design**
+Mohammed Younis

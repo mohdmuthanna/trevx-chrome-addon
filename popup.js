@@ -1,30 +1,43 @@
-var container = document.getElementById('trevx-when-popup-opened');
+var container = document.getElementById('trevx-search-result-list');
 
 if (container) {
   console.log("Start popup.js");
-  function createAudioLine(searchResultList){
+
+  function createAudioLines(searchResultList){
     var links = '';
     for (var i = 0; i < searchResultList.length; i++) {
-      links += "<br><a class='line' id='"+searchResultList[i].audioId+"' href='"+searchResultList[i].audioUrl+"'>"+ searchResultList[i].audioTitle+"</a>"
-                +"  " + "<a href='"+searchResultList[i].audioUrl+"' class='download'>Download<br>";
+      links += "<li>"
+                + "<a class='action play' id='"+searchResultList[i].audioId+"'  href="+ searchResultList[i].audioUrl +"></a>"
+                + "<a class='title' id='"+searchResultList[i].audioId+"' href='"+searchResultList[i].audioUrl+"'>"+ searchResultList[i].audioTitle+"</a>"
+                + "<a class='download' href='"+searchResultList[i].audioUrl+"'>"
+                + "</li>";
     }
     return (links);
   };
 
-  function createPlayListView(playList){
-    var output = '';
-    output = playList.playListTitle + createAudioLine(playList.content);
-    return (output);
-  };
-
   function playPause(target) {
+    // alert(target.title + ' mm ' + target.href);
     chrome.runtime.sendMessage({
         user_action: "playPause",
-        audio_url: target.href
+        audio_id : target.id
       }, function(response) {
         // document.getElementById("play-pause").innerHTML = response.msg;
       });
   };
+
+  function toggleButtonPlayPause(){
+    chrome.runtime.sendMessage({
+        user_action: "toggleButtonPlayPause"
+    },
+    function(response){
+    document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
+    });
+  } // end toggleButtonPlayPause
+
+  // for (var j=0; j < audioLinks.length; j++) {
+  //     audioLinks[j].setAttribute("class","action pause");
+  //     console.log(audioLinks.length + '   '+ j);
+  // };
 
   function download(target) {
     chrome.runtime.sendMessage({
@@ -33,52 +46,25 @@ if (container) {
     });
   };
 
-  window.onload = function() {
-    console.log("win onload");
-    getList();
-    getPlayList();
-  };
-
-  function getPlayList() {
-    // console.log("getPlayList");
+  function getSearchResultList() {
     chrome.runtime.sendMessage({
-      user_action: "getPlayList",
-      play_list_id: "id-road"
+      user_action: "getSearchResultList"
       },
 
       function(response) {
-        document.getElementById('trevx-get-play-list').innerHTML = createPlayListView(response.playList);
-        var audioLinks = document.querySelectorAll('.line');
-        var downloadLinks = document.querySelectorAll('.download');
+        document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
 
-        // for (var i = 0; i < audioLinks.length; i++) {
-        //     audioLinks[i].addEventListener('click', function(event) {
-        //         playPause(this);
-        //     });
-        // }
-        //
-        // for (var i = 0; i < downloadLinks.length; i++) {
-        //     downloadLinks[i].addEventListener('click', function(event) {
-        //         download(this);
-        //     });
-        // }
-      });
-  }
-
-  function getList() {
-    console.log("getList");
-    chrome.runtime.sendMessage({
-      user_action: "getList"
-      },
-
-      function(response) {
-        document.getElementById("trevx-get-list-result").innerHTML = createAudioLine(response.searchResultList);
-        var audioLinks = document.querySelectorAll('.line');
+        var audioLinks = document.querySelectorAll('.action');
         var downloadLinks = document.querySelectorAll('.download');
 
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
                 playPause(this);
+                for (var k = 0; k < audioLinks.length; k++) {
+                  audioLinks[k].setAttribute("class", "action play");
+                  console.log(k);
+                }
+                this.setAttribute("class", "action pause");
             });
         }
 
@@ -87,6 +73,12 @@ if (container) {
                 download(this);
             });
         }
-      });
-  }
+      }); // end of response
+  }  // getSearchResultList function
+
+  window.onload = function() {
+    console.log("win onload");
+    getSearchResultList();
+    // toggleButtonPlayPause();
+  };
 } // end of container
