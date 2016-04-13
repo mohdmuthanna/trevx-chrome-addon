@@ -25,14 +25,14 @@ if (container) {
       });
   };
 
-  function toggleButtonPlayPause(){
+  function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
-        user_action: "toggleButtonPlayPause"
+        user_action: "getWhatPlayingNow"
     },
     function(response){
     document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
     });
-  } // end toggleButtonPlayPause
+  } // end getWhatPlayingNow
 
   // for (var j=0; j < audioLinks.length; j++) {
   //     audioLinks[j].setAttribute("class","action pause");
@@ -53,18 +53,23 @@ if (container) {
 
       function(response) {
         document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
-
+        console.log(response.searchResultList);
         var audioLinks = document.querySelectorAll('.action');
         var downloadLinks = document.querySelectorAll('.download');
 
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
                 playPause(this);
+                //change all icon to readyToPlay
                 for (var k = 0; k < audioLinks.length; k++) {
                   audioLinks[k].setAttribute("class", "action play");
-                  console.log(k);
+                  console.log(response.audioState);
                 }
-                this.setAttribute("class", "action pause");
+                if (response.audioState == 'paused') {
+                    this.setAttribute("class", "action play");
+                } else {
+                    this.setAttribute("class", "action pause");
+                }
             });
         }
 
@@ -76,9 +81,25 @@ if (container) {
       }); // end of response
   }  // getSearchResultList function
 
+  function getWhatPlayingNow(){
+    chrome.runtime.sendMessage({
+      user_action: "getWhatPlayingNow"
+      },
+
+      function(response) {
+        var audioLinks = document.querySelectorAll('.action');
+        var activeAudio = response.activeAudio;
+        for (var i = 0; i < audioLinks.length; i++) {
+          if (audioLinks[i].id == activeAudio) {
+            audioLinks[i].setAttribute("class", "action pause");
+          }
+        }
+      })
+  } //end of getWhatPlayingNow
+
   window.onload = function() {
     console.log("win onload");
     getSearchResultList();
-    // toggleButtonPlayPause();
+    getWhatPlayingNow();
   };
 } // end of container

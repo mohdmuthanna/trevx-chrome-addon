@@ -3,6 +3,7 @@ console.log("back.js");
 var isPlaying = false;
 var isNewAudio = true;
 var activeAudio ='';
+var audioState = '';
 var l = new Audio();
 var searchResultList = [];
 
@@ -53,6 +54,7 @@ var searchResultList = [
 //     searchResultList = data["searchResultList"];
 //   });
 
+// ruturn audio url to certain id
 function getSrcById(id){
   for (var i = 0; i < searchResultList.length; i++) {
     if (searchResultList[i].audioId == id) {
@@ -61,13 +63,15 @@ function getSrcById(id){
   }
 }
 
-
 function getWhatPlayingNow(){
   // alert(l.paused);
   // alert('ddddddddddd');
 
   for (var i = 0; i < searchResultList.length; i++) {
-    array[i]
+      if (!l.paused && (searchResultList[i].audioId == activeAudio)) {
+        return activeAudio;
+      }
+
   }
 }
 
@@ -78,11 +82,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         searchResultList: searchResultList
     });
   }
-  else if (request.user_action == 'toggleButtonPlayPause') {
+  else if (request.user_action == 'getWhatPlayingNow') {
     getWhatPlayingNow();
     sendResponse({
-        searchResultList: searchResultList
+        activeAudio: getWhatPlayingNow()
     });
+    return true;
   }
   else if (request.user_action == "download") {
     window.open(request.audio_url,"_blank");
@@ -102,8 +107,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       isPlaying = !isPlaying;
     }
 
-    //check if the requsetd audio is new(not paused track),
-    //if you remove this the audio file start from 0 even it paused.
+    //check if the requsetd audio is new(not paused track),//if you remove this the audio file start from 0 even it paused.
     if ((activeAudio != request.audio_id)  ){
       l.src = getSrcById(request.audio_id);
     }
@@ -112,13 +116,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if ((isPlaying && !isNewAudio)) {
           isPlaying = false;
           l.pause();  // Stop playing // l.currentTime = 0;  // Go to to second no. Zero (start of the file)
+          audioState = 'paused';
+
+          return true;
         } else {  // play
           activeAudio = request.audio_id;
           isPlaying = true;
           l.play();
-        };
-  }
-});
+          audioState = 'playing';
+
+    };
+  };
+
+
+  sendResponse({
+      audioState: "ssssssssss"
+  });
+  return true;
+}); // end of listener
 
 // var searchResultList = [
 //   {
