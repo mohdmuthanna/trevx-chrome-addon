@@ -5,14 +5,18 @@ if (container) {
 
   function createAudioLines(searchResultList){
     var links = '';
+    if (true) {
+      // console.loge(searchResultList.resultCounter);
+    }
     for (var i = 0; i < searchResultList.length; i++) {
       links += "<li>"
                 // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
                 + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
                 + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
-                + "<a class='download' href='"+searchResultList[i].link+"'>"
+                + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
                 + "</li>";
     }
+    links = "<ul>" + links + "</ul>"
     return (links);
   };
 
