@@ -83,7 +83,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
   }
   else if (request.user_action == 'getWhatPlayingNow') {
-    getWhatPlayingNow();
+    // getWhatPlayingNow();
     sendResponse({
         activeAudio: getWhatPlayingNow()
     });
@@ -115,24 +115,32 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         //pause
     if ((isPlaying && !isNewAudio)) {
           isPlaying = false;
-          l.pause();  // Stop playing // l.currentTime = 0;  // Go to to second no. Zero (start of the file)
           audioState = 'paused';
-
+          sendResponse({
+              audioState: audioState,
+              isPlaying: isPlaying,
+              activeAudio: activeAudio
+          });
+          l.pause();  // Stop playing // l.currentTime = 0;  // Go to to second no. Zero (start of the file)
           return true;
+
+
         } else {  // play
           activeAudio = request.audio_id;
           isPlaying = true;
-          l.play();
           audioState = 'playing';
+          sendResponse({
+              audioState: audioState,
+              isPlaying: isPlaying,
+              activeAudio: activeAudio
+          });
+          l.play();
+          return true;
+
 
     };
   };
 
-
-  sendResponse({
-      audioState: "ssssssssss"
-  });
-  return true;
 }); // end of listener
 
 // var searchResultList = [

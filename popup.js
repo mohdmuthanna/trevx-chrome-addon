@@ -7,7 +7,8 @@ if (container) {
     var links = '';
     for (var i = 0; i < searchResultList.length; i++) {
       links += "<li>"
-                + "<a class='action play' id='"+searchResultList[i].audioId+"'  href="+ searchResultList[i].audioUrl +"></a>"
+                // + "<a class='action play' id='"+searchResultList[i].audioId+"'  href="+ searchResultList[i].audioUrl +"></a>"
+                + "<a class='action play' id='"+searchResultList[i].audioId+"'href='#'></a>"
                 + "<a class='title' id='"+searchResultList[i].audioId+"' href='"+searchResultList[i].audioUrl+"'>"+ searchResultList[i].audioTitle+"</a>"
                 + "<a class='download' href='"+searchResultList[i].audioUrl+"'>"
                 + "</li>";
@@ -16,14 +17,22 @@ if (container) {
   };
 
   function playPause(target) {
-    // alert(target.title + ' mm ' + target.href);
+
     chrome.runtime.sendMessage({
         user_action: "playPause",
         audio_id : target.id
       }, function(response) {
-        // document.getElementById("play-pause").innerHTML = response.msg;
-      });
-  };
+        // var audioLinks = document.querySelectorAll('.action');
+
+        // should add somthing here to apply this change only to the specifid element
+        //even there are anothor element with the same id value
+        // get clicked button and change its state[play, pause]
+        var toChange = document.getElementById(response.activeAudio);
+        if (response.isPlaying){
+          toChange.setAttribute("class", "action pause");
+        }
+      })
+  }; // end of playPause function
 
   function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
@@ -63,12 +72,12 @@ if (container) {
                 //change all icon to readyToPlay
                 for (var k = 0; k < audioLinks.length; k++) {
                   audioLinks[k].setAttribute("class", "action play");
-                  console.log(response.audioState);
+                  // console.log(response.audioState);
                 }
                 if (response.audioState == 'paused') {
-                    this.setAttribute("class", "action play");
+                    // this.setAttribute("class", "action play");
                 } else {
-                    this.setAttribute("class", "action pause");
+                    // this.setAttribute("class", "action pause");
                 }
             });
         }
