@@ -7,10 +7,10 @@ if (container) {
     var links = '';
     for (var i = 0; i < searchResultList.length; i++) {
       links += "<li>"
-                // + "<a class='action play' id='"+searchResultList[i].audioId+"'  href="+ searchResultList[i].audioUrl +"></a>"
-                + "<a class='action play' id='"+searchResultList[i].audioId+"'href='#'></a>"
-                + "<a class='title' id='"+searchResultList[i].audioId+"' href='"+searchResultList[i].audioUrl+"'>"+ searchResultList[i].audioTitle+"</a>"
-                + "<a class='download' href='"+searchResultList[i].audioUrl+"'>"
+                // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
+                + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
+                + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
+                + "<a class='download' href='"+searchResultList[i].link+"'>"
                 + "</li>";
     }
     return (links);

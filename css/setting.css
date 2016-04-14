@@ -1,7 +1,12 @@
+body{
+	    margin-bottom: 0;
+}
+
 .trevx-when-popup-opened {
 	width: 550px;
 	border: 2px solid #dd4433;
 	background-color: #fff;
+	margin: -8px;
 }
 .trevx-when-popup-opened .search {
 	overflow: hidden;

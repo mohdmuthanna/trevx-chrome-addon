@@ -7,46 +7,58 @@ var audioState = '';
 var l = new Audio();
 var searchResultList = [];
 
+
+var test = {
+"id":"1",
+"title":"White Flag",
+"link":"http:\/\/musicjustfor.me\/assets\/songs\/17000-17999\/17223-white-flag-dido--1411569520.mp3",
+"image":"",
+"filename":"",
+"queryId":"1",
+"downloadUrl":"http:\/\/trevx.com\/download.php?songTitle=White Flag&fileloc=aHR0cDovL211c2ljanVzdGZvci5tZS9hc3NldHMvc29uZ3MvMTcwMDAtMTc5OTkvMTcyMjMtd2hpdGUtZmxhZy1kaWRvLS0xNDExNTY5NTIwLm1wMw==&key=7e369966ceef073b1beeb49ca3f98f76&resultid=1&queryid=1"};
+
+
+
 var searchResultList = [
   {
-    audioTitle: "Zain AlAbedeen",
-    audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-    audioId: "98989989887452165"
+    "title": "Zain AlAbedeen",
+    "link": "http:\/\/trevx.com\/download.php?songTitle=Vybz Kartel - Hi&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPXZxT2trVmwxaFVF&key=82bc4528f94588a63a080f876b55b61c&resultid=115179&queryid=8052",
+    "id": "98989989887452165"
   },
   {
-    audioTitle: "Abdulrazzak",
-    audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-    audioId: "id-abd"
+    "title": "Abdulrazzak",
+    "link": "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+    "id": "id-abd"
   },
   {
-    audioTitle: "Abdulrazzak 2",
-    audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-    audioId: "id-abd2"
+    "title": "Abdulrazzak 2",
+    "link": "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+    "id": "id-abd2"
   },
   {
-    audioTitle: "Water drop",
-    audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-    audioId: "id-water"
+    "title": "Water drop",
+    "link": "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
+    "id": "id-water"
   },
   {
-    audioTitle: "Zain AlAbedeen",
-    audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-    audioId: "id-zain1"
+    "title": "Zain AlAbedeen",
+    "link": "http://www.aldwaihi.com/ram/24frzdq37.mp3",
+    "id": "id-zain1"
   },
   {
-    audioTitle: "Abdulrazzak",
-    audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-    audioId: "id-abd1"
+    "title": "Abdulrazzak",
+    "link": "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+    "id": "id-abd1"
   },
   {
-    audioTitle: "Abdulrazzak 2",
-    audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-    audioId: "id-abd21"
+    "title": "Abdulrazzak 2",
+    "link": "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+    "id": "id-abd21"
   },
   {
-    audioTitle: "Water drop1",
-    audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-    audioId: "id-water1"
+    "title": "Water drop1",
+    "link": "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
+    "id": "id-water1"
   }
 ];
 
@@ -57,8 +69,8 @@ var searchResultList = [
 // ruturn audio url to certain id
 function getSrcById(id){
   for (var i = 0; i < searchResultList.length; i++) {
-    if (searchResultList[i].audioId == id) {
-      return searchResultList[i].audioUrl;
+    if (searchResultList[i].id == id) {
+      return searchResultList[i].link;
     }
   }
 }
@@ -68,7 +80,7 @@ function getWhatPlayingNow(){
   // alert('ddddddddddd');
 
   for (var i = 0; i < searchResultList.length; i++) {
-      if (!l.paused && (searchResultList[i].audioId == activeAudio)) {
+      if (!l.paused && (searchResultList[i].id == activeAudio)) {
         return activeAudio;
       }
 
@@ -145,24 +157,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 // var searchResultList = [
 //   {
-//     audioTitle: "Zain AlAbedeen",
-//     audioUrl: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-//     audioId: "id-zain"
+//     "title": "Zain AlAbedeen",
+//     link: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
+//     "id": "id-zain"
 //   },
 //   {
-//     audioTitle: "Abdulrazzak",
-//     audioUrl: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-//     audioId: "id-abd"
+//     title: "Abdulrazzak",
+//     link: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
+//     "id": "id-abd"
 //   },
 //   {
-//     audioTitle: "Abdulrazzak 2",
-//     audioUrl: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-//     audioId: "id-abd2"
+//     title: "Abdulrazzak 2",
+//     link: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
+//     "id": "id-abd2"
 //   },
 //   {
-//     audioTitle: "Water drop",
-//     audioUrl: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-//     audioId: "id-water"
+//     title: "Water drop",
+//     link: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
+//     "id": "id-water"
 //   }
 // ];
 //
