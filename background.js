@@ -5,6 +5,18 @@ var isNewAudio = true;
 var activeAudio ='';
 var audioState = '';
 var l = new Audio();
+var test = new Audio();
+// test.src = 'http://ms1.sm3na.com/31/Sm3na_com_12995.mp3';
+// test.src = 'http://ms1.sm3na.com/11/Sm3na_com_12182.mp3';
+// l.currentTime = 5;
+// first run, define searchResultList
+if (typeof searchResultList === 'undefined') {
+  var searchResultList =[];
+  var isFoundResult = -1;
+  chrome.storage.local.get("searchResultList", function(data) {
+      searchResultList = data["searchResultList"];
+    });
+}
 
 //not used
 function readBody(xhr) {
@@ -19,74 +31,36 @@ function readBody(xhr) {
     return data;
 }
 
-var xhr = new XMLHttpRequest();
+function callTrevxAPI(searchQueryValueEncoded){
+  // check internet connection
+  if (navigator.onLine) {
+    // http://trevx.com/v1/(query)/[start from]/[numOfResult]/?format=json
+    var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/1/40/?format=json'
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url , false);
+    xhr.send(null);
 
-// http://trevx.com/v1/(query)/[start from]/[numOfResult]/?format=json
+    //manipulate json object (it's work, but not the right way)
+    searchResultList = xhr.response;
+    isFoundResult = searchResultList.indexOf("Data Returned Successfully");
+    if (isFoundResult != -1) {
+      var end = searchResultList.indexOf(",\"details");
+      searchResultList = searchResultList.substring(0, end);
+      searchResultList = searchResultList +"]";
+      searchResultList = JSON.parse(searchResultList);
+      //remove redundent result
+      searchResultList = searchResultList.reduceRight(function (r, a) {
+          r.some(function (b) { return a.link === b.link; }) || r.push(a);
+          return r;
+      }, []);
+    } else{
+      searchResultList = [];
+    }
 
-xhr.open('GET', 'http://trevx.com/v1/ali/1/40/?format=json', false);
-xhr.send(null);
-
-//manipulate json object
-var searchResultList = xhr.response;
-var end = searchResultList.indexOf(",\"details");
-searchResultList = searchResultList.substring(0, end);
-searchResultList = searchResultList +"]";
-var searchResultList = JSON.parse(searchResultList);
-
-var searchResultList4444 = [
-  {
-    "title": "Zain AlAbedeen",
-    "link": "http:\/\/trevx.com\/download.php?songTitle=Vybz Kartel - Hi&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPXZxT2trVmwxaFVF&key=82bc4528f94588a63a080f876b55b61c&resultid=115179&queryid=8052",
-    "id": "98989989887452165",
-    'ism':"ccccccccccc"
-  },
-  {
-    "title": "Abdulrazzak",
-    "link": "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-    "id": "id-abd"
-  },
-  {
-    "title": "Abdulrazzak 2",
-    "link": "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-    "id": "id-abd2"
-  },
-  {
-    "title": "Water drop",
-    "link": "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-    "id": "id-water"
-  },
-  {
-    "title": "Zain AlAbedeen",
-    "link": "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-    "id": "id-zain1"
-  },
-  {
-    "title": "Abdulrazzak",
-    "link": "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-    "id": "id-abd1"
-  },
-  {
-    "title": "Abdulrazzak 2",
-    "link": "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-    "id": "id-abd21"
-  },
-  {
-    "title": "Water drop1",
-    "link": "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-    "id": "id-water1"
+    chrome.storage.local.set({'searchResultList': searchResultList}, function() {
+            });
   }
-];
-
-
-// searchResultList =
-// [{"id":"87932","title":"Crystallize - Lindsey Stirling","link":"http:\/\/mp3http.co\/ymp3dl.html?vid=aHjpOzsQ9YI",
-// "image":"http:\/\/i.ytimg.com\/vi\/aHjpOzsQ9YI\/default.jpg","filename":"","queryId":"5881","downloadUrl":"http:\/\/trevx.com\/download.php?songTitle=Crystallize - Lindsey Stirling&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPWFIanBPenNROVlJ&key=cd68dd617cb8f72a201afbe305a98776&resultid=87932&queryid=5881"},{"id":"87933","title":"Flashlight - Jessie J - Violin Cover - Daniel Jang","link":"http:\/\/mp3http.co\/ymp3dl.html?vid=jYG0GTNY8cc","image":"http:\/\/i.ytimg.com\/vi\/jYG0GTNY8cc\/default.jpg","filename":"","queryId":"5881","downloadUrl":"http:\/\/trevx.com\/download.php?songTitle=Flashlight - Jessie J - Violin Cover - Daniel Jang&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPWpZRzBHVE5ZOGNj&key=575bfcd4945bad8d1e79f0015bc35e23&resultid=87933&queryid=5881"},{"id":"87934","title":"Elements - Lindsey Stirling","link":"http:\/\/mp3http.co\/ymp3dl.html?vid=sf6LD2B_kDQ","image":"http:\/\/i.ytimg.com\/vi\/sf6LD2B_kDQ\/default.jpg","filename":"","queryId":"5881","downloadUrl":"http:\/\/trevx.com\/download.php?songTitle=Elements - Lindsey Stirling&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPXNmNkxEMkJfa0RR&key=e76e4a3b0e6a70b92e11a24d63fed689&resultid=87934&queryid=5881"},{"id":"87931","title":"Ellie Goulding - Love Me Like You Do","link":"http:\/\/mp3http.co\/ymp3dl.html?vid=g3SSEd2MO7g","image":"http:\/\/i.ytimg.com\/vi\/g3SSEd2MO7g\/default.jpg","filename":"","queryId":"5881","downloadUrl":"http:\/\/trevx.com\/download.php?songTitle=Ellie Goulding - Love Me Like You Do&fileloc=aHR0cDovL21wM2h0dHAuY28veW1wM2RsLmh0bWw\/dmlkPWczU1NFZDJNTzdn&key=1f2d5853947c3ba907979d7efcd14db1&resultid=87931&queryid=5881"}];
-
-
-
-// chrome.storage.sync.get("searchResultList", function(data) {
-//     searchResultList = data["searchResultList"];
-//   });
+}
 
 // ruturn audio url to certain id
 function getSrcById(id){
@@ -111,10 +85,19 @@ function getWhatPlayingNow(){
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getSearchResultList") {
-    // alert('getSearchResultList');
+    chrome.storage.local.get("searchResultList", function(data) {
+        searchResultList = data["searchResultList"];
+      });
+      // alert(searchResultList[0].id);
+      // if ((searchResultList.length == 0) || (searchResultList[0].id==undefined)) {
+      //   searchResultList = [];
+      // }
     sendResponse({
         searchResultList: searchResultList
     });
+  } else if (request.user_action == "searchButtonClicked") {
+    var searchQueryValueEncoded = request.searchQueryValueEncoded;
+    callTrevxAPI(searchQueryValueEncoded);
   }
   else if (request.user_action == 'getWhatPlayingNow') {
     // getWhatPlayingNow();
@@ -170,8 +153,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           });
           l.play();
           return true;
-
-
     };
   };
 
@@ -200,12 +181,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 //   }
 // ];
 //
-// chrome.storage.sync.set({'searchResultList': searchResultList}, function() {
+// chrome.storage.local.set({'searchResultList': searchResultList}, function() {
 //         });
-
-
-
-
 
 //
 // locale: (function () {

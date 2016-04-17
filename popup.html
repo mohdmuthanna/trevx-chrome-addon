@@ -7,19 +7,18 @@
     </style>
   </head>
   <body>
-
-    <div class="trevx-when-popup-opened">
-      <div class="search"> <img src="images/logo.png" alt="logo" width="64" height="20">
-        <input type="text" placeholder="Start by typing song name, artist name or any audio content">
-        <input type="submit" value="Search">
-      </div>
-
-        <div id='trevx-search-result-list'>
-
+    <div class="trevx-chrome-popup">
+      <div class="trevx-when-popup-opened">
+        <div class="search"> <img src="images/logo.png" alt="logo" width="64" height="20">
+          <form class="" action="" method="post">
+            <input type="text" id="trevx-search-box" placeholder="Start by typing song name, artist name or any audio content">
+            <input type="submit" id="trevx-search-button" value="Search">
+          </form>
         </div>
-
-
+        <div id='trevx-search-result-list'></div>
+      </div>
     </div>
+
 
     <!--
     <div id="trevx-when-popup-opened">
