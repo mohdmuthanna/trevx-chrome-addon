@@ -1,34 +1,28 @@
 var searchForm = document.getElementById('trevx-chrome-popup');
 var container = document.getElementById('trevx-search-result-list');
 
-// var aa = [
-// {"id":"29"},
-// {"id":"33"},
-// "no:141","start:0","limit:20"];
-//
-// console.log("29  " + aa[0].id);
-// console.log("cont  " + aa[2].no);
-// console.log("limit  " + aa[4][limit]);
-// aaaa = "asa asas dfdf dfdfd dfdfdf";
-// alert(aaaa.indexOf(",\"details"));
 if (container) {
+
   function createAudioLines(searchResultList){
     var links = '';
     console.log("searchResultList.length =  " + searchResultList.length);
     if ((searchResultList.length > 0) && navigator.onLine) {
       for (var i = 0; i < searchResultList.length; i++) {
-        links += "<li>"
+        links +="<li>"
                   // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
                   + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
-                  + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
+                  // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
+                  + "<a class='title' id='"+searchResultList[i].id+"' href='#'>"+ searchResultList[i].title+"</a>"
+                  // + "<p>"+ searchResultList[i].title +"</p>"
                   + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
                   + "</li>";
+                  // + links;
       }
       links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
       links = "<p align='center'>Check your internet connection and try again later</p>";
     } else {
-      links = "<p align='center'>No result found, Try another word(s)</p>";
+      links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
     }
 
     return (links);

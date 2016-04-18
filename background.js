@@ -2,59 +2,89 @@ console.log("back.js");
 
 var isPlaying = false;
 var isNewAudio = true;
-var activeAudio ='';
+var activeAudio =''; // id of the audio
 var audioState = '';
 var l = new Audio();
-var test = new Audio();
+// var test = new Audio();
 // test.src = 'http://ms1.sm3na.com/31/Sm3na_com_12995.mp3';
 // test.src = 'http://ms1.sm3na.com/11/Sm3na_com_12182.mp3';
 // l.currentTime = 5;
+
 // first run, define searchResultList
 if (typeof searchResultList === 'undefined') {
   var searchResultList =[];
   var isFoundResult = -1;
+  var searchResultAsPlaylist = [];
   chrome.storage.local.get("searchResultList", function(data) {
       searchResultList = data["searchResultList"];
     });
 }
 
 //not used
-function readBody(xhr) {
-    var data;
-    if (!xhr.responseType || xhr.responseType === "text") {
-        data = xhr.responseText;
-    } else if (xhr.responseType === "document") {
-        data = xhr.responseXML;
-    } else {
-        data = xhr.response;
+
+function playNextAudio(){
+  var activeAudioPosition = -1;
+  //get position of currnet audio
+  for (var i = 0; i < searchResultAsPlaylist.length; i++) {
+    if (searchResultAsPlaylist[i] == activeAudio) {
+      activeAudioPosition = i;
+      break;
     }
-    return data;
-}
+  }
+  if (activeAudioPosition+1 < searchResultAsPlaylist.length) {
+    l.src = getSrcById(searchResultAsPlaylist[activeAudioPosition+1]);
+    activeAudio = searchResultAsPlaylist[activeAudioPosition+1];
+    l.play();
+  }
+
+} //playNextAudio
+
+l.onended = function() {
+  playNextAudio();
+  // alert("play next on ended");
+};
+
+l.onerror = function(){
+  // alert('wwwwww');
+};
+
+//remove redundent result
+function removeRedundentResult(){
+  searchResultList = searchResultList.reduceRight(function (r, a) {
+      r.some(function (b) { return a.link === b.link; }) || r.push(a);
+      return r;
+  }, []);
+  searchResultList = searchResultList.reverse();
+};
+
+function makeSearchResultAsPlaylist(){
+  searchResultAsPlaylist = [];
+  for (var i = 0; i < searchResultList.length; i++) {
+    searchResultAsPlaylist[i] = searchResultList[i].id;
+  }
+};
 
 function callTrevxAPI(searchQueryValueEncoded){
-  // check internet connection
-  if (navigator.onLine) {
+  if (navigator.onLine) {   // check internet connection
     // http://trevx.com/v1/(query)/[start from]/[numOfResult]/?format=json
-    var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/1/40/?format=json'
+    var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/0/40/?format=json'
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url , false);
     xhr.send(null);
 
     //manipulate json object (it's work, but not the right way)
     searchResultList = xhr.response;
-    isFoundResult = searchResultList.indexOf("Data Returned Successfully");
+    isFoundResult = searchResultList.indexOf("details:Data Returned Successfully");
     if (isFoundResult != -1) {
       var end = searchResultList.indexOf(",\"details");
       searchResultList = searchResultList.substring(0, end);
       searchResultList = searchResultList +"]";
       searchResultList = JSON.parse(searchResultList);
-      //remove redundent result
-      searchResultList = searchResultList.reduceRight(function (r, a) {
-          r.some(function (b) { return a.link === b.link; }) || r.push(a);
-          return r;
-      }, []);
+      removeRedundentResult();
+      makeSearchResultAsPlaylist();
     } else{
       searchResultList = [];
+      searchResultAsPlaylist = [];
     }
 
     chrome.storage.local.set({'searchResultList': searchResultList}, function() {
