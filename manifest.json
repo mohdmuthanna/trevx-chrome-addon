@@ -1,17 +1,14 @@
 {
   "name": "Trevx",
-  "version": "0.2",
-  "description": "Welcome to Trevx, The leading audio search engine in the world, The place you can find, play and download any audio file on the web",
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["popup.js"]
-  }],
+  "version": "0.1",
+  "version_name": "0.1 beta",
+  "description": "Trevx is audio search engine, The place you can find, play and download any audio file on the web",
   "background": {
     "scripts": ["background.js"]
   },
 
   "browser_action": {
-    "default_title": "communicate with background",
+    "default_title": "",
     "default_popup": "popup.html",
     "default_icon": "images/icon.png",
     "default_popup": "popup.html"
@@ -22,7 +19,7 @@
     "64" : "images/64.png",
     "128" : "images/64.png"
   },
-
+  "homepage_url": "http://trevx.com/",
   "permissions": [
     "activeTab",
     "storage"

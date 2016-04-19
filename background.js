@@ -1,14 +1,8 @@
-console.log("back.js");
-
 var isPlaying = false;
 var isNewAudio = true;
 var activeAudio =''; // id of the audio
 var audioState = '';
 var l = new Audio();
-// var test = new Audio();
-// test.src = 'http://ms1.sm3na.com/31/Sm3na_com_12995.mp3';
-// test.src = 'http://ms1.sm3na.com/11/Sm3na_com_12182.mp3';
-// l.currentTime = 5;
 
 // first run, define searchResultList
 if (typeof searchResultList === 'undefined') {
@@ -19,8 +13,6 @@ if (typeof searchResultList === 'undefined') {
       searchResultList = data["searchResultList"];
     });
 }
-
-//not used
 
 function playNextAudio(){
   var activeAudioPosition = -1;
@@ -41,11 +33,11 @@ function playNextAudio(){
 
 l.onended = function() {
   playNextAudio();
-  // alert("play next on ended");
+  var isErorrOnPlay = true;
 };
 
 l.onerror = function(){
-  // alert('wwwwww');
+  playNextAudio();
 };
 
 //remove redundent result
@@ -72,7 +64,7 @@ function callTrevxAPI(searchQueryValueEncoded){
     xhr.open('GET', url , false);
     xhr.send(null);
 
-    //manipulate json object (it's work, but not the right way)
+    //manipulate json object (it's work, but not the right way, API return unproperate value)
     searchResultList = xhr.response;
     isFoundResult = searchResultList.indexOf("details:Data Returned Successfully");
     if (isFoundResult != -1) {
@@ -90,7 +82,8 @@ function callTrevxAPI(searchQueryValueEncoded){
     chrome.storage.local.set({'searchResultList': searchResultList}, function() {
             });
   }
-}
+
+}//end of callTrevxAPI
 
 // ruturn audio url to certain id
 function getSrcById(id){
@@ -102,26 +95,27 @@ function getSrcById(id){
 }
 
 function getWhatPlayingNow(){
-  // alert(l.paused);
-  // alert('ddddddddddd');
-
-  for (var i = 0; i < searchResultList.length; i++) {
-      if (!l.paused && (searchResultList[i].id == activeAudio)) {
-        return activeAudio;
-      }
-
+  if (!(searchResultList === undefined)) {
+    for (var i = 0; i < searchResultList.length; i++) {
+        if (!l.paused && (searchResultList[i].id == activeAudio)) {
+          return activeAudio;
+        }
+    }
   }
-}
+}// end getWhatPlayingNow
+
+// Welcom page, opened after installing extension
+chrome.runtime.onInstalled.addListener(function (object) {
+    chrome.tabs.create({url: "http://trevx.com/about-us.php"}, function (tab) {
+    });
+});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getSearchResultList") {
     chrome.storage.local.get("searchResultList", function(data) {
         searchResultList = data["searchResultList"];
       });
-      // alert(searchResultList[0].id);
-      // if ((searchResultList.length == 0) || (searchResultList[0].id==undefined)) {
-      //   searchResultList = [];
-      // }
+
     sendResponse({
         searchResultList: searchResultList
     });
@@ -130,7 +124,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     callTrevxAPI(searchQueryValueEncoded);
   }
   else if (request.user_action == 'getWhatPlayingNow') {
-    // getWhatPlayingNow();
     sendResponse({
         activeAudio: getWhatPlayingNow()
     });
@@ -187,39 +180,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   };
 
 }); // end of listener
-
-// var searchResultList = [
-//   {
-//     "title": "Zain AlAbedeen",
-//     link: "http://www.aldwaihi.com/ram/24frzdq37.mp3",
-//     "id": "id-zain"
-//   },
-//   {
-//     title: "Abdulrazzak",
-//     link: "http://www.abdulrazzak.com/sounds/oant_hna_kank_ma_3lyk.mp3",
-//     "id": "id-abd"
-//   },
-//   {
-//     title: "Abdulrazzak 2",
-//     link: "http://abdulrazzak.com/sounds/ya_sbr_ayob.mp3",
-//     "id": "id-abd2"
-//   },
-//   {
-//     title: "Water drop",
-//     link: "http://www.funonsite.com/funarea/ringtones/download-ringtone-1362-funonsite.com.mp3",
-//     "id": "id-water"
-//   }
-// ];
-//
-// chrome.storage.local.set({'searchResultList': searchResultList}, function() {
-//         });
-
-//
-// locale: (function () {
-//   var ajax = new XMLHttpRequest();
-//
-//   ajax.open("get", chrome.extension.getURL("locales/" + chrome.i18n.getMessage("locale") + "/ui.json"), false);
-//   ajax.send();
-//
-//   return JSON.parse(ajax.responseText);
-// }())

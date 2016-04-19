@@ -5,18 +5,21 @@ if (container) {
 
   function createAudioLines(searchResultList){
     var links = '';
-    console.log("searchResultList.length =  " + searchResultList.length);
-    if ((searchResultList.length > 0) && navigator.onLine) {
-      for (var i = 0; i < searchResultList.length; i++) {
-        links +="<li>"
-                  // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
-                  + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
-                  // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
-                  + "<a class='title' id='"+searchResultList[i].id+"' href='#'>"+ searchResultList[i].title+"</a>"
-                  // + "<p>"+ searchResultList[i].title +"</p>"
-                  + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
-                  + "</li>";
-                  // + links;
+    //Need to be rewrited in better way
+    if (!(searchResultList === undefined)) {
+      if (searchResultList.length > 0) {
+        for (var i = 0; i < searchResultList.length; i++) {
+          links +="<li>"
+                    // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
+                    + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
+                    // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
+                    + "<a class='title' id='"+searchResultList[i].id+"' href='#'>"+ searchResultList[i].title+"</a>"
+                    // + "<p>"+ searchResultList[i].title +"</p>"
+                    + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
+                    + "</li>";
+        }
+      } else {
+        links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
       }
       links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
@@ -24,9 +27,8 @@ if (container) {
     } else {
       links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
     }
-
     return (links);
-  };
+  }; // createAudioLines end
 
   function playPause(target) {
 
@@ -34,8 +36,6 @@ if (container) {
         user_action: "playPause",
         audio_id : target.id
       }, function(response) {
-        // var audioLinks = document.querySelectorAll('.action');
-
         // should add somthing here to apply this change only to the specifid element
         //even there are anothor element with the same id value
         // get clicked button and change its state[play, pause]
@@ -70,7 +70,6 @@ if (container) {
 
       function(response) {
         document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
-        console.log(response.searchResultList);
         var audioLinks = document.querySelectorAll('.action');
         var downloadLinks = document.querySelectorAll('.download');
 
@@ -80,7 +79,6 @@ if (container) {
                 //change all icon to readyToPlay
                 for (var k = 0; k < audioLinks.length; k++) {
                   audioLinks[k].setAttribute("class", "action play");
-                  // console.log(response.audioState);
                 }
                 if (response.audioState == 'paused') {
                     // this.setAttribute("class", "action play");
@@ -101,44 +99,36 @@ if (container) {
   document.getElementById('trevx-search-button').onclick = function() {
     var searchQueryValue = document.getElementById('trevx-search-box').value;
     var searchQueryValueEncoded = encodeURIComponent(searchQueryValue);
-    // alert('hoooooooooooooo');
     chrome.runtime.sendMessage({
       user_action: "searchButtonClicked",
       searchQueryValueEncoded: searchQueryValueEncoded
     }, function(response) {
-      // alert('befor get serch result')
       getSearchResultList();
     })
 
   }
 
-    // submit.addEventListener('click', function(e) {
-    //   var searchValue = encodeURIComponent(search.value);  // encode the search query
-    //   window.location.href = 'http://www.website.com/search/' + searchValue ;
-    // });
-
-
-
-  // }
   function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
       user_action: "getWhatPlayingNow"
       },
 
       function(response) {
-        var audioLinks = document.querySelectorAll('.action');
-        var activeAudio = response.activeAudio;
-        for (var i = 0; i < audioLinks.length; i++) {
-          if (audioLinks[i].id == activeAudio) {
-            audioLinks[i].setAttribute("class", "action pause");
+        if (!(response.activeAudio === undefined)) {
+          var audioLinks = document.querySelectorAll('.action');
+          var activeAudio = response.activeAudio;
+          for (var i = 0; i < audioLinks.length; i++) {
+            if (audioLinks[i].id == activeAudio) {
+              audioLinks[i].setAttribute("class", "action pause");
+            }
           }
         }
-      })
+        })
   } //end of getWhatPlayingNow
 
   window.onload = function() {
-    console.log("win onload");
     getSearchResultList();
     getWhatPlayingNow();
   };
+
 } // end of container
