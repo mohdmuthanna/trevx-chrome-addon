@@ -34,11 +34,25 @@ function playNextAudio(){
 l.onended = function() {
   playNextAudio();
   var isErorrOnPlay = true;
+  chrome.browserAction.setIcon({
+    path : "images/not-playing.png"
+  });
 };
 
 l.onerror = function(){
   playNextAudio();
 };
+
+l.onplaying = function(){
+  chrome.browserAction.setIcon({
+    path : "images/playing.png"
+  });
+}
+l.onpause = function(){
+  chrome.browserAction.setIcon({
+    path : "images/not-playing.png"
+  });
+}
 
 //remove redundent result
 function removeRedundentResult(){
@@ -57,31 +71,36 @@ function makeSearchResultAsPlaylist(){
 };
 
 function callTrevxAPI(searchQueryValueEncoded){
-  if (navigator.onLine) {   // check internet connection
-    // http://trevx.com/v1/(query)/[start from]/[numOfResult]/?format=json
+  // check internet connection
+  // http://trevx.com/v1/(query)/[start from]/[numOfResult]/?format=json
+
+  try {
     var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/0/40/?format=json'
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url , false);
     xhr.send(null);
-
     //manipulate json object (it's work, but not the right way, API return unproperate value)
     searchResultList = xhr.response;
     isFoundResult = searchResultList.indexOf("details:Data Returned Successfully");
-    if (isFoundResult != -1) {
-      var end = searchResultList.indexOf(",\"details");
-      searchResultList = searchResultList.substring(0, end);
-      searchResultList = searchResultList +"]";
-      searchResultList = JSON.parse(searchResultList);
-      removeRedundentResult();
-      makeSearchResultAsPlaylist();
-    } else{
-      searchResultList = [];
-      searchResultAsPlaylist = [];
-    }
+  } catch (err) {
+    searchResultList = [];
+    searchResultAsPlaylist = [];
+  } // try end
 
-    chrome.storage.local.set({'searchResultList': searchResultList}, function() {
-            });
+  if (isFoundResult != -1) {
+    var end = searchResultList.indexOf(",\"details");
+    searchResultList = searchResultList.substring(0, end);
+    searchResultList = searchResultList +"]";
+    searchResultList = JSON.parse(searchResultList);
+    removeRedundentResult();
+    // makeSearchResultAsPlaylist();
+  } else{
+    searchResultList = [];
+    searchResultAsPlaylist = [];
   }
+
+  chrome.storage.local.set({'searchResultList': searchResultList}, function() {
+          });
 
 }//end of callTrevxAPI
 
@@ -105,23 +124,25 @@ function getWhatPlayingNow(){
 }// end getWhatPlayingNow
 
 // Welcom page, opened after installing extension
-chrome.runtime.onInstalled.addListener(function (object) {
-    chrome.tabs.create({url: "http://trevx.com/about-us.php"}, function (tab) {
-    });
-});
+// chrome.runtime.onInstalled.addListener(function (object) {
+//     chrome.tabs.create({url: "http://trevx.com/about-us.php"}, function (tab) {
+//     });
+// });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getSearchResultList") {
     chrome.storage.local.get("searchResultList", function(data) {
         searchResultList = data["searchResultList"];
       });
-
+        makeSearchResultAsPlaylist();
     sendResponse({
         searchResultList: searchResultList
     });
   } else if (request.user_action == "searchButtonClicked") {
     var searchQueryValueEncoded = request.searchQueryValueEncoded;
     callTrevxAPI(searchQueryValueEncoded);
+  } else if (request.user_action == "interactiveSearch") {
+    callTrevxAPI(request.searchQueryValueEncoded);
   }
   else if (request.user_action == 'getWhatPlayingNow') {
     sendResponse({
@@ -130,7 +151,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
   }
   else if (request.user_action == "download") {
-    window.open(request.audio_url,"_blank");
+    window.open(request.audio_url);
   }
   else if (request.user_action == "playPause") {
 

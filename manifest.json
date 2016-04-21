@@ -1,8 +1,8 @@
 {
-  "name": "Trevx",
-  "version": "0.1",
-  "version_name": "0.1 beta",
-  "description": "Trevx is audio search engine, The place you can find, play and download any audio file on the web",
+  "name": "Trevx Music Player",
+  "version": "0.1.1",
+  "version_name": "0.1.1",
+  "description": "Trevx Music Player; allow you to listen to music while browsing",
   "background": {
     "scripts": ["background.js"]
   },
@@ -10,7 +10,7 @@
   "browser_action": {
     "default_title": "",
     "default_popup": "popup.html",
-    "default_icon": "images/icon.png",
+    "default_icon": "images/welcome.png",
     "default_popup": "popup.html"
   },
   "icons": {
@@ -22,7 +22,10 @@
   "homepage_url": "http://trevx.com/",
   "permissions": [
     "activeTab",
-    "storage"
+    "*://trevx.com/*",
+    "storage",
+    "webRequest"
+
 
   ],
   "manifest_version": 2

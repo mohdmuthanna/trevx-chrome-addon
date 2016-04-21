@@ -46,6 +46,16 @@ if (container) {
       })
   }; // end of playPause function
 
+  //not used
+  function sendUserQuery(user_action, searchQueryValueEncoded) {
+    chrome.runtime.sendMessage({
+      user_action: "searchButtonClicked",
+      searchQueryValueEncoded: searchQueryValueEncoded
+    }, function(response) {
+      getSearchResultList();
+    })
+  }
+
   function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
         user_action: "getWhatPlayingNow"
@@ -105,7 +115,6 @@ if (container) {
     }, function(response) {
       getSearchResultList();
     })
-
   }
 
   function getWhatPlayingNow(){
@@ -127,8 +136,25 @@ if (container) {
   } //end of getWhatPlayingNow
 
   window.onload = function() {
+    // interactiveSearch youtube need to check the API
+    // chrome.tabs.getSelected(null,function(tab) {
+    //   if (tab.url.indexOf("youtube.com/watch?v=") != -1) {
+    //     var searchQueryValueEncoded = encodeURIComponent('https://www.youtube.com/watch?v=YQHsXMglC9A');
+    //     console.log(searchQueryValueEncoded);
+    //     chrome.runtime.sendMessage({
+    //       user_action: "interactiveSearch",
+    //       searchQueryValueEncoded: searchQueryValueEncoded
+    //     }, function(response) {
+    //       getSearchResultList();
+    //     })
+    //   } else {
+    //     // getSearchResultList();
+    //   }
+    // });
+
     getSearchResultList();
     getWhatPlayingNow();
+
   };
 
 } // end of container
