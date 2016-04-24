@@ -4,13 +4,16 @@ var activeAudio =''; // id of the audio
 var audioState = '';
 var l = new Audio();
 
+
 // first run, define searchResultList
 if (typeof searchResultList === 'undefined') {
   var searchResultList =[];
+  var favoritesList = [];
   var isFoundResult = -1;
   var searchResultAsPlaylist = [];
   chrome.storage.local.get("searchResultList", function(data) {
       searchResultList = data["searchResultList"];
+      favoritesList = data["favoritesList"];
     });
 }
 
