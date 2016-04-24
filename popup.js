@@ -56,6 +56,34 @@ if (container) {
     })
   }
 
+  function checkInteractiveSearch(){
+    // interactiveSearch youtube need to check the API
+    // chrome.tabs.getSelected(null,function(tab) {
+    //   if (tab.url.indexOf("youtube.com/watch?v=") != -1) {
+    //     var searchQueryValueEncoded = encodeURIComponent('https://www.youtube.com/watch?v=YQHsXMglC9A');
+    //     console.log(searchQueryValueEncoded);
+    //     chrome.runtime.sendMessage({
+    //       user_action: "interactiveSearch",
+    //       searchQueryValueEncoded: searchQueryValueEncoded
+    //     }, function(response) {
+    //       getSearchResultList();
+    //     })
+    //   } else {
+    //     // getSearchResultList();
+    //   }
+    // });
+    try {
+      var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/0/40/?format=json'
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url , false);
+      xhr.send(null);
+      //manipulate json object (it's work, but not the right way, API return unproperate value)
+      searchResultList = xhr.response;
+    } catch (err) {
+
+    } // try end
+  }
+
   function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
         user_action: "getWhatPlayingNow"
@@ -109,12 +137,14 @@ if (container) {
   document.getElementById('trevx-search-button').onclick = function() {
     var searchQueryValue = document.getElementById('trevx-search-box').value;
     var searchQueryValueEncoded = encodeURIComponent(searchQueryValue);
-    chrome.runtime.sendMessage({
-      user_action: "searchButtonClicked",
-      searchQueryValueEncoded: searchQueryValueEncoded
-    }, function(response) {
-      getSearchResultList();
-    })
+    if (searchQueryValueEncoded.length != 0) {
+      chrome.runtime.sendMessage({
+        user_action: "searchButtonClicked",
+        searchQueryValueEncoded: searchQueryValueEncoded
+      }, function(response) {
+        getSearchResultList();
+      })
+    }
   }
 
   function getWhatPlayingNow(){
@@ -136,24 +166,12 @@ if (container) {
   } //end of getWhatPlayingNow
 
   window.onload = function() {
-    // interactiveSearch youtube need to check the API
-    // chrome.tabs.getSelected(null,function(tab) {
-    //   if (tab.url.indexOf("youtube.com/watch?v=") != -1) {
-    //     var searchQueryValueEncoded = encodeURIComponent('https://www.youtube.com/watch?v=YQHsXMglC9A');
-    //     console.log(searchQueryValueEncoded);
-    //     chrome.runtime.sendMessage({
-    //       user_action: "interactiveSearch",
-    //       searchQueryValueEncoded: searchQueryValueEncoded
-    //     }, function(response) {
-    //       getSearchResultList();
-    //     })
-    //   } else {
-    //     // getSearchResultList();
-    //   }
-    // });
-
     getSearchResultList();
     getWhatPlayingNow();
+    // checkInteractiveSearch();
+    chrome.tabs.getSelected(null,function(tab) {
+      // console.log(tab.title + ' t       u ' + tab.url);
+    });
 
   };
 
