@@ -47,6 +47,37 @@ if (container) {
     return (links);
   }; // createAudioLines end
 
+  function createFavoriteLines(favoritesList){
+    var links = '';
+    if (!(favoritesList === undefined)) {
+      if (favoritesList.length > 0) {
+        var toChange = document.getElementById("cover-favorite-cover");
+            toChange.setAttribute("style", "visibility: hidden");
+        for (var i = 0; i < favoritesList.length; i++) {
+          links +="<li>"
+                  +"<a class='action' id='"+favoritesList[i].id+"'href='#'>"
+                  +   "<img src='"+ getAudioImage(favoritesList[i].image) +"' width='40' height='40'>"
+                  +   "<span icon-id='"+favoritesList[i].id+"' class='icon play'></span>"
+                  +"</a>"
+                  + "<a class='title' title-id='"+favoritesList[i].id+"' title='"+favoritesList[i].title+"'>"+ getAudioTitle(favoritesList[i].title)+"</a>"
+                  // + "<p>"+ favoritesList[i].title +"</p>"
+                  +"<a href='#' del-id='"+favoritesList[i].id+"' class='remove'>X</a>"
+                  + "<a class='download' href='"+favoritesList[i].downloadUrl+"'>"
+                  +"</li>";
+        }
+         return links;
+      }
+    }
+  }
+  function getFavoritesList(){
+    // console.log(favoritesList);
+    chrome.runtime.sendMessage({
+      user_action: "getFavoritesList"
+      }, function(response) {
+        document.getElementById("list-favorite-list").innerHTML = createFavoriteLines(response.favoritesList);
+      })
+  }
+
   function changeFavoriteIconsState(){
 
     chrome.runtime.sendMessage({
@@ -104,15 +135,7 @@ if (container) {
         } else {
           toChangeFavIcon.setAttribute('class', 'favorite');
         }
-        // var toChange = document.getElementById("1");
-        // var favoriteIcons = document.querySelectorAll('.favorite');
-        // var favoritesList = response.favoritesList;
-        // console.log(favoritesList);
-        // console.log( favoriteIcons[0].getAttribute('fav-id'));
-        // changeFavoriteIconsState();
-        // document.getElementByAtrr('name-of-id').onclick = function() {
-        // }
-
+        getFavoritesList();
       });
   }
 
@@ -240,7 +263,7 @@ if (container) {
     getSearchResultList();
     getWhatPlayingNow();
     changeFavoriteIconsState();
-    // getFavoriteList();
+    getFavoritesList();
     // checkInteractiveSearch();
     chrome.tabs.getSelected(null,function(tab) {
       // console.log(tab.title + ' t       u ' + tab.url);

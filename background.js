@@ -202,7 +202,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   } else if (request.user_action == "getFavoritesList") {
     sendResponse({
         favoritesList : favoritesList
-
     });
     // alert(favoritesList);
     return true;
