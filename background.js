@@ -11,16 +11,15 @@ var l = new Audio();
 if (typeof searchResultList === 'undefined') {
   // var searchResultList =[];
   // var favoritesLinks =
-  // var favoritesList = [];
+  var favoritesList = [];
   var isFoundResult = -1;
   var searchResultAsPlaylist = [];
   chrome.storage.local.get("searchResultList", function(data) {
       searchResultList = data["searchResultList"];
+      // favoritesList = data["favoritesList"];
     });
-  chrome.storage.local.get("favoritesList", function(data2) {
-      favoritesList = data2["favoritesList"];
-    });
-
+    // chrome.storage.local.set({'favoritesList': searchResultList}, function() {
+    //         });
 }
 
 function checkIfFavored(target){
@@ -36,16 +35,12 @@ function addToFavorites(target){
   for (var i = 0; i < searchResultList.length; i++) {
     if (searchResultList[i].id == target) {
       var active = i;
-      var element = searchResultList[active];
-      favoritesList.push(element);
-      // alert(favoritesList);
     }
   }
   var element = searchResultList[active];
   favoritesList.push(element);
-  chrome.storage.local.set({'favoritesList': favoritesList}, function() {
-          });
-          alert(favoritesList);
+  // chrome.storage.local.set({'favoritesList': favoritesList}, function() {
+  //         });
 } // add to favorite
 
 function removeFromFavorites(target){
@@ -190,38 +185,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   } else if (request.user_action == 'favoritesListAddRemove') {
       var target = request.audio_fav_id;
-      chrome.storage.local.get("favoritesList", function(data2) {
-          favoritesList = data2["favoritesList"];
-        });
-        if (true) {
-          var isFavored = checkIfFavored(target);
-          alert(isFavored);
+      var isFavored = checkIfFavored(target);
+      // alert(isFavored);
 
-          if (isFavored == -1) {
-            addToFavorites(target);
-          } else {
-            removeFromFavorites(target);
-          }
-
-          sendResponse({
-              isFavored: isFavored
-          });
-        } else {
-          sendResponse({
-              isFavored: -1
-          });
-        }
-
+      if (isFavored == -1) {
+        addToFavorites(target);
+      } else {
+        removeFromFavorites(target);
+      }
+      // alert(favoritesList);
+      sendResponse({
+          favoritesList: favoritesList,
+          isFavored : isFavored
+      });
 
   } else if (request.user_action == "getFavoritesList") {
-    chrome.storage.local.get("favoritesList", function(data2) {
-        favoritesList = data2["favoritesList"];
-      });
-      if (!favoritesList) {
-        var favoritesList = [];
-      }
     sendResponse({
         favoritesList : favoritesList
+
     });
     // alert(favoritesList);
     return true;

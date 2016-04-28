@@ -41,20 +41,18 @@ if (container) {
       user_action: "getFavoritesList"
       }, function(response) {
         favoritesList = response.favoritesList;
-        console.log(favoritesList);
-        if (response.favoritesList){
-          var favoriteIcons = document.querySelectorAll('.favorite');
-          for (var i = 0; i < favoriteIcons.length; i++) {
-            for (var j = 0; j < favoritesList.length; j++) {
-              if (favoritesList[j].id == favoriteIcons[i].getAttribute("fav-id")) {
-                favoriteIcons[i].setAttribute("class", "favorite active");
-                // favoritesList.splice( j, 1 );
-              }
+        // console.log(favoritesList);
+        var favoriteIcons = document.querySelectorAll('.favorite');
+        for (var i = 0; i < favoriteIcons.length; i++) {
+          for (var j = 0; j < favoritesList.length; j++) {
+            if (favoritesList[j].id == favoriteIcons[i].getAttribute("fav-id")) {
+              favoriteIcons[i].setAttribute("class", "favorite active");
+              // favoritesList.splice( j, 1 );
             }
           }
-        }//end of if
+        }
       })
-      // console.log(favoritesList);
+      console.log(favoritesList);
 
   } // changeFavoriteIconsState
 
@@ -87,13 +85,22 @@ if (container) {
         audio_fav_id : target
       }, function(response) {
         var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
-        if (true) {
-          if (response.isFavored == -1) {
-            toChangeFavIcon.setAttribute('class', 'favorite active');
-          } else {
-            toChangeFavIcon.setAttribute('class', 'favorite');
-          }
+        // console.log("toChangeFavIcon= " + toChangeFavIcon);
+        console.log("isFavored= " + response.isFavored);
+        if (response.isFavored == -1) {
+          toChangeFavIcon.setAttribute('class', 'favorite active');
+        } else {
+          toChangeFavIcon.setAttribute('class', 'favorite');
         }
+        // var toChange = document.getElementById("1");
+        // var favoriteIcons = document.querySelectorAll('.favorite');
+        // var favoritesList = response.favoritesList;
+        // console.log(favoritesList);
+        // console.log( favoriteIcons[0].getAttribute('fav-id'));
+        // changeFavoriteIconsState();
+        // document.getElementByAtrr('name-of-id').onclick = function() {
+        // }
+
       });
   }
 
@@ -174,7 +181,6 @@ if (container) {
             favoritesLinks[i].addEventListener('click', function(event) {
               // console.log("test  " + this.getAttribute("fav-id"))
               favoritesListAddRemove(this.getAttribute("fav-id"));
-              // console.log("pop clicked id= " + this.getAttribute("fav-id") )
             });
         }
 
