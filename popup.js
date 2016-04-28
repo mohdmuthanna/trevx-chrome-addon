@@ -4,6 +4,18 @@ var container = document.getElementById('trevx-lists');
 
 if (container) {
   var favoritesList =[];
+  function getAudioTitle(title){
+    if (title.length > 40){
+      title = title.substr(0,39) + "..";
+    }
+    return title;
+  }
+  function getAudioImage(imgUrl){
+    if (imgUrl.length == 0){
+      imgUrl = "images/cover-img.jpg";
+    }
+    return imgUrl;
+  }
   function createAudioLines(searchResultList){
     var links = '';
     //Need to be rewrited in better way
@@ -13,11 +25,11 @@ if (container) {
           links +="<li>"
                     // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
                     + "<a class='action' id='"+searchResultList[i].id+"'href='#'>"
-                    +   "<img src='"+ searchResultList[i].image +"' width='40' height='40'>"
+                    +   "<img src='"+ getAudioImage(searchResultList[i].image) +"' width='40' height='40'>"
                     +   "<span icon-id='"+searchResultList[i].id+"' class='icon play'></span>"
                     +"</a>"
                     // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
-                    + "<a class='title' title-id='"+searchResultList[i].id+"'>"+ searchResultList[i].title+"</a>"
+                    + "<a class='title' title-id='"+searchResultList[i].id+"' title='"+searchResultList[i].title+"'>"+ getAudioTitle(searchResultList[i].title)+"</a>"
                     // + "<p>"+ searchResultList[i].title +"</p>"
                     + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
                     + "<a class='favorite' fav-id='"+searchResultList[i].id+"'href='#'></a>"
@@ -228,6 +240,7 @@ if (container) {
     getSearchResultList();
     getWhatPlayingNow();
     changeFavoriteIconsState();
+    // getFavoriteList();
     // checkInteractiveSearch();
     chrome.tabs.getSelected(null,function(tab) {
       // console.log(tab.title + ' t       u ' + tab.url);
