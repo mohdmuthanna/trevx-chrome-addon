@@ -1,8 +1,9 @@
 var searchForm = document.getElementById('trevx-chrome-popup');
-var container = document.getElementById('trevx-search-result-list');
+var container = document.getElementById('trevx-lists');
+// var favoritesList =[];
 
 if (container) {
-
+  var favoritesList =[];
   function createAudioLines(searchResultList){
     var links = '';
     //Need to be rewrited in better way
@@ -11,18 +12,21 @@ if (container) {
         for (var i = 0; i < searchResultList.length; i++) {
           links +="<li>"
                     // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
-                    + "<a class='action play' id='"+searchResultList[i].id+"'href='#'></a>"
+                    + "<a class='action' id='"+searchResultList[i].id+"'href='#'>"
+                    +   "<img src='"+ searchResultList[i].image +"' width='40' height='40'>"
+                    +   "<span icon-id='"+searchResultList[i].id+"' class='icon play'></span>"
+                    +"</a>"
                     // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
-                    + "<a class='title' id='"+searchResultList[i].id+"' href='#'>"+ searchResultList[i].title+"</a>"
+                    + "<a class='title' title-id='"+searchResultList[i].id+"'>"+ searchResultList[i].title+"</a>"
                     // + "<p>"+ searchResultList[i].title +"</p>"
-                    + "<a class='fav yes' id='"+searchResultList[i].id+"'href='#fav'>fava</a>"
                     + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
+                    + "<a class='favorite' fav-id='"+searchResultList[i].id+"'href='#'></a>"
                     + "</li>";
         }
       } else {
         links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
       }
-      links = "<ul>" + links + "</ul>"
+      // links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
       links = "<p align='center'>Check your internet connection and try again later</p>";
     } else {
@@ -30,6 +34,29 @@ if (container) {
     }
     return (links);
   }; // createAudioLines end
+
+  function changeFavoriteIconsState(){
+
+    chrome.runtime.sendMessage({
+      user_action: "getFavoritesList"
+      }, function(response) {
+        favoritesList = response.favoritesList;
+        console.log(favoritesList);
+        if (response.favoritesList){
+          var favoriteIcons = document.querySelectorAll('.favorite');
+          for (var i = 0; i < favoriteIcons.length; i++) {
+            for (var j = 0; j < favoritesList.length; j++) {
+              if (favoritesList[j].id == favoriteIcons[i].getAttribute("fav-id")) {
+                favoriteIcons[i].setAttribute("class", "favorite active");
+                // favoritesList.splice( j, 1 );
+              }
+            }
+          }
+        }//end of if
+      })
+      // console.log(favoritesList);
+
+  } // changeFavoriteIconsState
 
   function playPause(target) {
 
@@ -40,9 +67,16 @@ if (container) {
         // should add somthing here to apply this change only to the specifid element
         //even there are anothor element with the same id value
         // get clicked button and change its state[play, pause]
-        var toChange = document.getElementById(response.activeAudio);
+        var toChange = document.getElementById(response.activeAudio).childNodes[1];
+        var icons = document.querySelectorAll(".icon");
+        console.log(toChange);
         if (response.isPlaying){
-          toChange.setAttribute("class", "action pause");
+          for (var i = 0; i < icons.length; i++) {
+            icons[i].setAttribute("class", "icon play");
+          }
+          toChange.setAttribute("class", "icon pause");
+        } else {
+          toChange.setAttribute("class", "icon play");
         }
       })
   }; // end of playPause function
@@ -50,14 +84,17 @@ if (container) {
   function favoritesListAddRemove(target){
     chrome.runtime.sendMessage({
         user_action: "favoritesListAddRemove",
-        audio_id : target.id
+        audio_fav_id : target
       }, function(response) {
-        var toChange = document.getElementById(response.activeAudio);
-        if (response.isPlaying){
-          toChange.setAttribute("class", "action pause");
+        var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
+        if (true) {
+          if (response.isFavored == -1) {
+            toChangeFavIcon.setAttribute('class', 'favorite active');
+          } else {
+            toChangeFavIcon.setAttribute('class', 'favorite');
+          }
         }
-      })
-
+      });
   }
 
   //not used
@@ -103,7 +140,7 @@ if (container) {
         user_action: "getWhatPlayingNow"
     },
     function(response){
-    document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
+    document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
     });
   } // end getWhatPlayingNow
 
@@ -121,29 +158,23 @@ if (container) {
       },
 
       function(response) {
-        document.getElementById("trevx-search-result-list").innerHTML = createAudioLines(response.searchResultList);
+        document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
         var audioLinks = document.querySelectorAll('.action');
         var downloadLinks = document.querySelectorAll('.download');
-        var favoritesLinks = document.querySelectorAll('.fav');
+        var favoritesLinks = document.querySelectorAll('.favorite');
 
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
+              // console.log('i click play  = ' + this);
                 playPause(this);
-                //change all icon to readyToPlay
-                for (var k = 0; k < audioLinks.length; k++) {
-                  audioLinks[k].setAttribute("class", "action play");
-                }
-                if (response.audioState == 'paused') {
-                    // this.setAttribute("class", "action play");
-                } else {
-                    // this.setAttribute("class", "action pause");
-                }
             });
         }
 
         for (var i = 0; i < favoritesLinks.length; i++) {
             favoritesLinks[i].addEventListener('click', function(event) {
-                favoritesListAddRemove(this);
+              // console.log("test  " + this.getAttribute("fav-id"))
+              favoritesListAddRemove(this.getAttribute("fav-id"));
+              // console.log("pop clicked id= " + this.getAttribute("fav-id") )
             });
         }
 
@@ -154,6 +185,7 @@ if (container) {
         }
       }); // end of response
   }  // getSearchResultList function
+
 
   document.getElementById('trevx-search-button').onclick = function() {
     var searchQueryValue = document.getElementById('trevx-search-box').value;
@@ -179,7 +211,7 @@ if (container) {
           var activeAudio = response.activeAudio;
           for (var i = 0; i < audioLinks.length; i++) {
             if (audioLinks[i].id == activeAudio) {
-              audioLinks[i].setAttribute("class", "action pause");
+              audioLinks[i].childNodes[1].setAttribute("class", "icon pause");
             }
           }
         }
@@ -189,6 +221,7 @@ if (container) {
   window.onload = function() {
     getSearchResultList();
     getWhatPlayingNow();
+    changeFavoriteIconsState();
     // checkInteractiveSearch();
     chrome.tabs.getSelected(null,function(tab) {
       // console.log(tab.title + ' t       u ' + tab.url);

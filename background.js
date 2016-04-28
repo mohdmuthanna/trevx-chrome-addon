@@ -2,19 +2,59 @@ var isPlaying = false;
 var isNewAudio = true;
 var activeAudio =''; // id of the audio
 var audioState = '';
+var favoritesList = [];
+// alert(favoritesList.length);
 var l = new Audio();
 
 
 // first run, define searchResultList
 if (typeof searchResultList === 'undefined') {
-  var searchResultList =[];
-  var favoritesList = [];
+  // var searchResultList =[];
+  // var favoritesLinks =
+  // var favoritesList = [];
   var isFoundResult = -1;
   var searchResultAsPlaylist = [];
   chrome.storage.local.get("searchResultList", function(data) {
       searchResultList = data["searchResultList"];
-      favoritesList = data["favoritesList"];
     });
+  chrome.storage.local.get("favoritesList", function(data2) {
+      favoritesList = data2["favoritesList"];
+    });
+
+}
+
+function checkIfFavored(target){
+  for (var i = 0; i < favoritesList.length; i++) {
+    if (favoritesList[i].id == target) {
+      return [i];
+    }
+  }
+  return -1;
+}
+
+function addToFavorites(target){
+  for (var i = 0; i < searchResultList.length; i++) {
+    if (searchResultList[i].id == target) {
+      var active = i;
+      var element = searchResultList[active];
+      favoritesList.push(element);
+      // alert(favoritesList);
+    }
+  }
+  var element = searchResultList[active];
+  favoritesList.push(element);
+  chrome.storage.local.set({'favoritesList': favoritesList}, function() {
+          });
+          alert(favoritesList);
+} // add to favorite
+
+function removeFromFavorites(target){
+  for (var i = 0; i < favoritesList.length; i++) {
+    if (favoritesList[i].id == target) {
+      favoritesList.splice( i, 1 );
+
+    }
+  }
 }
 
 function playNextAudio(){
@@ -144,8 +184,47 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   } else if (request.user_action == "searchButtonClicked") {
     var searchQueryValueEncoded = request.searchQueryValueEncoded;
     callTrevxAPI(searchQueryValueEncoded);
+
   } else if (request.user_action == "interactiveSearch") {
     callTrevxAPI(request.searchQueryValueEncoded);
+
+  } else if (request.user_action == 'favoritesListAddRemove') {
+      var target = request.audio_fav_id;
+      chrome.storage.local.get("favoritesList", function(data2) {
+          favoritesList = data2["favoritesList"];
+        });
+        if (true) {
+          var isFavored = checkIfFavored(target);
+          alert(isFavored);
+
+          if (isFavored == -1) {
+            addToFavorites(target);
+          } else {
+            removeFromFavorites(target);
+          }
+
+          sendResponse({
+              isFavored: isFavored
+          });
+        } else {
+          sendResponse({
+              isFavored: -1
+          });
+        }
+
+
+  } else if (request.user_action == "getFavoritesList") {
+    chrome.storage.local.get("favoritesList", function(data2) {
+        favoritesList = data2["favoritesList"];
+      });
+      if (!favoritesList) {
+        var favoritesList = [];
+      }
+    sendResponse({
+        favoritesList : favoritesList
+    });
+    // alert(favoritesList);
+    return true;
   }
   else if (request.user_action == 'getWhatPlayingNow') {
     sendResponse({
