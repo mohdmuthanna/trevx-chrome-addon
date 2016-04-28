@@ -221,3 +221,9 @@ body, input, a {
  background-color:#bbb;
 }
 /* /Scrollbar Style */
+
+
+.inactiveLink {
+   pointer-events: none;
+   cursor: default;
+}

@@ -50,8 +50,9 @@ if (container) {
   function createFavoriteLines(favoritesList){
     var links = '';
     if (!(favoritesList === undefined)) {
+      // to view or hidden favorite coler
+      var toChange = document.getElementById("cover-favorite-cover");
       if (favoritesList.length > 0) {
-        var toChange = document.getElementById("cover-favorite-cover");
             toChange.setAttribute("style", "visibility: hidden");
         for (var i = 0; i < favoritesList.length; i++) {
           links +="<li>"
@@ -66,15 +67,44 @@ if (container) {
                   +"</li>";
         }
          return links;
+      } else {
+        toChange.setAttribute("style", "");
       }
     }
   }
+
   function getFavoritesList(){
     // console.log(favoritesList);
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
         document.getElementById("list-favorite-list").innerHTML = createFavoriteLines(response.favoritesList);
+        var removeFavoriteLinks = document.querySelectorAll('.remove');
+        var audioLinks = document.querySelectorAll('.action');
+        var downloadLinks = document.querySelectorAll('.download');
+        // console.log(removeFavoriteLinks);
+
+        for (var i = 0; i < removeFavoriteLinks.length; i++) {
+            removeFavoriteLinks[i].addEventListener('click', function(event) {
+              console.log( this);
+                favoritesListAddRemove(this.getAttribute("del-id"));
+            });
+        }
+
+        for (var i = 0; i < audioLinks.length; i++) {
+            audioLinks[i].addEventListener('click', function(event) {
+              // console.log('i click play  = ' + this);
+                playPause(this);
+            });
+        }
+
+
+        for (var i = 0; i < downloadLinks.length; i++) {
+            downloadLinks[i].addEventListener('click', function(event) {
+                download(this);
+            });
+        }
+
       })
   }
 

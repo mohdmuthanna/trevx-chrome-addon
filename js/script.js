@@ -24,3 +24,11 @@ $('.favorite').click(function(event) {
 	$(this).toggleClass('active');
 });
 /* /Add to Favorite */
+
+
+
+// not work
+$('#cover-favorite-coverrrrr').click(function(e)
+{
+    e.preventDefault();
+});
