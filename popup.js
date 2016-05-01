@@ -26,7 +26,7 @@ if (container) {
                     // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
                     + "<a class='action' id='"+searchResultList[i].id+"'href='#'>"
                     +   "<img src='"+ getAudioImage(searchResultList[i].image) +"' width='40' height='40'>"
-                    +   "<span icon-id='"+searchResultList[i].id+"' class='icon play'></span>"
+                    +   "<span res-list-icon-id='"+searchResultList[i].id+"' class='icon play'></span>"
                     +"</a>"
                     // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
                     + "<a class='title' title-id='"+searchResultList[i].id+"' title='"+searchResultList[i].title+"'>"+ getAudioTitle(searchResultList[i].title)+"</a>"
@@ -36,7 +36,8 @@ if (container) {
                     + "</li>";
         }
       } else {
-        links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
+        links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
+        // links = "<div class=\"msg msg2\">No result found, please try another word(s).</div>";
       }
       // links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
@@ -58,7 +59,7 @@ if (container) {
           links +="<li>"
                   +"<a class='action' id='"+favoritesList[i].id+"'href='#'>"
                   +   "<img src='"+ getAudioImage(favoritesList[i].image) +"' width='40' height='40'>"
-                  +   "<span icon-id='"+favoritesList[i].id+"' class='icon play'></span>"
+                  +   "<span fav-list-icon-id='"+favoritesList[i].id+"' class='icon play'></span>"
                   +"</a>"
                   + "<a class='title' title-id='"+favoritesList[i].id+"' title='"+favoritesList[i].title+"'>"+ getAudioTitle(favoritesList[i].title)+"</a>"
                   // + "<p>"+ favoritesList[i].title +"</p>"
@@ -79,9 +80,10 @@ if (container) {
       user_action: "getFavoritesList"
       }, function(response) {
         document.getElementById("list-favorite-list").innerHTML = createFavoriteLines(response.favoritesList);
-        var removeFavoriteLinks = document.querySelectorAll('.remove');
-        var audioLinks = document.querySelectorAll('.action');
-        var downloadLinks = document.querySelectorAll('.download');
+        var removeFavoriteLinks = document.querySelectorAll('.favorite-list .remove');
+        var audioLinks = document.querySelectorAll('.favorite-list .action');
+        var downloadLinks = document.querySelectorAll('.favorite-list .download');
+        var whichSectionClicked = "favorite-list";
         // console.log(removeFavoriteLinks);
 
         for (var i = 0; i < removeFavoriteLinks.length; i++) {
@@ -94,7 +96,7 @@ if (container) {
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
               // console.log('i click play  = ' + this);
-                playPause(this);
+                playPause(this , whichSectionClicked);
             });
         }
 
@@ -129,17 +131,26 @@ if (container) {
 
   } // changeFavoriteIconsState
 
-  function playPause(target) {
+  function playPause(target, whichSectionClicked) {
 
     chrome.runtime.sendMessage({
         user_action: "playPause",
-        audio_id : target.id
+        audio_id: target.id,
+        whichSectionClicked: whichSectionClicked
       }, function(response) {
         // should add somthing here to apply this change only to the specifid element
         //even there are anothor element with the same id value
-        // get clicked button and change its state[play, pause]
-        var toChange = document.getElementById(response.activeAudio).childNodes[1];
-        var icons = document.querySelectorAll(".icon");
+        // get clicked button and change its state[play, pause
+        if (whichSectionClicked == "results-list") {
+          var toChange = document.querySelector("span[res-list-icon-id='"+ response.activeAudio +"']");
+          // var toChange = document.getElementById(response.activeAudio).childNodes[1];
+        } else if (whichSectionClicked == "favorite-list") {
+          var toChange = document.querySelector("span[fav-list-icon-id='"+ response.activeAudio +"']");
+        }
+        // var toChange = document.getElementById(response.activeAudio).childNodes[1];
+        // var aa = "#"+response.activeAudio
+        // var toChange2 = document.querySelectorAll(' + aa +');
+        var icons = document.querySelectorAll("div#trevx-lists .icon");
         console.log(toChange);
         if (response.isPlaying){
           for (var i = 0; i < icons.length; i++) {
@@ -157,15 +168,21 @@ if (container) {
         user_action: "favoritesListAddRemove",
         audio_fav_id : target
       }, function(response) {
+        // var toChangeFavIcon = document.querySelecto
         var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
         // console.log("toChangeFavIcon= " + toChangeFavIcon);
         console.log("isFavored= " + response.isFavored);
-        if (response.isFavored == -1) {
-          toChangeFavIcon.setAttribute('class', 'favorite active');
-        } else {
-          toChangeFavIcon.setAttribute('class', 'favorite');
-        }
+
+        // not used
+        // if (response.isFavored == -1) {
+        //   // toChangeFavIcon.setAttribute('class', 'favorite active');
+        // } else {
+        //   // toChangeFavIcon.setAttribute('class', 'favorite');
+        // }
         getFavoritesList();
+        getSearchResultList();
+        changeFavoriteIconsState();
+        getWhatPlayingNow();
       });
   }
 
@@ -175,7 +192,7 @@ if (container) {
       user_action: "searchButtonClicked",
       searchQueryValueEncoded: searchQueryValueEncoded
     }, function(response) {
-      getSearchResultList();
+      // getSearchResultList();
     })
   }
 
@@ -231,14 +248,14 @@ if (container) {
 
       function(response) {
         document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
-        var audioLinks = document.querySelectorAll('.action');
-        var downloadLinks = document.querySelectorAll('.download');
-        var favoritesLinks = document.querySelectorAll('.favorite');
-
+        var audioLinks = document.querySelectorAll('.results-list .action');
+        var downloadLinks = document.querySelectorAll('.results-list .download');
+        var favoritesLinks = document.querySelectorAll('.results-list .favorite');
+        var whichSectionClicked = "results-list";
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
-              // console.log('i click play  = ' + this);
-                playPause(this);
+              // console.log('i click  = ' + this);
+                playPause(this, whichSectionClicked);
             });
         }
 
@@ -262,11 +279,14 @@ if (container) {
     var searchQueryValue = document.getElementById('trevx-search-box').value;
     var searchQueryValueEncoded = encodeURIComponent(searchQueryValue);
     if (searchQueryValueEncoded.length != 0) {
+      var loading = document.getElementById('loading-msg');
+      loading.setAttribute("class", "loading");
       chrome.runtime.sendMessage({
         user_action: "searchButtonClicked",
         searchQueryValueEncoded: searchQueryValueEncoded
       }, function(response) {
-        getSearchResultList();
+        // loading.setAttribute("class", "loading hidden");
+        // getSearchResultList();
       })
     }
   }

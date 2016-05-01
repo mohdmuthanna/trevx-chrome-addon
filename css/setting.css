@@ -7,6 +7,9 @@ body, input, a {
 	font: normal normal 16px/1.4 Arial, Helvetica, sans-serif;
 	color: #666;
 }
+body {
+	margin: 0;
+}
 .trevx-chrome-popup {
 	width: 601px;
 	height: 430px;
@@ -46,6 +49,9 @@ body, input, a {
 	outline: none;
 	background: none;
 	color: #fff;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #dd4433 inset;
 }
 ::-webkit-input-placeholder {
  color: #fff;
@@ -198,10 +204,20 @@ body, input, a {
 	text-align: right;
 	color: #999;
 }
-.loading, .msg {
-	display: none;
+.loading {
 	position: absolute;
-	top: 2px;
+	top: 50px;
+	bottom: 0;
+	left: 0;
+	right: 301px;
+	padding: 160px 0 0;
+	background-color: #fff;
+	text-align: center;
+	z-index: 9999;
+}
+.msg {
+	position: absolute;
+	top: 50px;
 	bottom: 0;
 	left: 0;
 	right: 0;
@@ -209,6 +225,12 @@ body, input, a {
 	background-color: #fff;
 	text-align: center;
 	z-index: 9999;
+}
+.no-result {
+	border-bottom: 0 none !important;
+}
+.no-result:hover {
+	background: none !important;
 }
 /* Scrollbar Style */
 ::-webkit-scrollbar {
@@ -223,7 +245,11 @@ body, input, a {
 /* /Scrollbar Style */
 
 
-.inactiveLink {
+/*.inactiveLink {
    pointer-events: none;
    cursor: default;
+}*/
+
+.hidden {
+	display: none;
 }

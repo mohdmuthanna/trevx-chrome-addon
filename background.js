@@ -3,6 +3,7 @@ var isNewAudio = true;
 var activeAudio =''; // id of the audio
 var audioState = '';
 var favoritesList = [];
+var whichSectionClicked = ''; // 'results-list' & 'favorite-list' these value will be bind to this var when user click play or pause
 // alert(favoritesList.length);
 var l = new Audio();
 
@@ -216,7 +217,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     window.open(request.audio_url);
   }
   else if (request.user_action == "playPause") {
-
+    whichSectionClicked = request.whichSectionClicked;
+    // alert("play pause");
     // check if the recusted audio is new or not
     if (activeAudio == request.audio_id) {
       isNewAudio = false;
