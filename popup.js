@@ -16,6 +16,13 @@ if (container) {
     }
     return imgUrl;
   }
+  //timer
+  function stateChange(newState) {
+    setTimeout(function () {
+        if (newState == -1) {
+        }
+    }, 5000);
+  }
   function createAudioLines(searchResultList){
     var links = '';
     //Need to be rewrited in better way
@@ -37,13 +44,17 @@ if (container) {
         }
       } else {
         links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
+        // stateChange(-1);
+        // document.getElementById("results-cover").setAttribute("class", "")
         // links = "<div class=\"msg msg2\">No result found, please try another word(s).</div>";
       }
       // links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
       links = "<p align='center'>Check your internet connection and try again later</p>";
     } else {
-      links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
+      // links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
+      //the cover will be displayed after first run
+      document.getElementById("results-cover").setAttribute("class", "")
     }
     return (links);
   }; // createAudioLines end

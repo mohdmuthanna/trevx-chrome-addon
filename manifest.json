@@ -2,7 +2,7 @@
   "name": "Trevx Music Player",
   "version": "0.1.1",
   "version_name": "0.1.1",
-  "description": "Trevx Music Player; allow you to listen to music while browsing",
+  "description": "Instant Music Listening Experience, turn your chrome browser into music player",
   "background": {
     "scripts": ["background.js"]
   },
