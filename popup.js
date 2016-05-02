@@ -43,7 +43,7 @@ if (container) {
     } else if (!navigator.onLine) {
       links = "<p align='center'>Check your internet connection and try again later</p>";
     } else {
-      links = "<p align='center'>No result found, Start new search or try another word(s)</p>";
+      links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
     }
     return (links);
   }; // createAudioLines end
@@ -79,11 +79,11 @@ if (container) {
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
-        document.getElementById("list-favorite-list").innerHTML = createFavoriteLines(response.favoritesList);
-        var removeFavoriteLinks = document.querySelectorAll('.favorite-list .remove');
-        var audioLinks = document.querySelectorAll('.favorite-list .action');
-        var downloadLinks = document.querySelectorAll('.favorite-list .download');
-        var whichSectionClicked = "favorite-list";
+        document.getElementById("list-favorites-list").innerHTML = createFavoriteLines(response.favoritesList);
+        var removeFavoriteLinks = document.querySelectorAll('.favorites-list .remove');
+        var audioLinks = document.querySelectorAll('.favorites-list .action');
+        var downloadLinks = document.querySelectorAll('.favorites-list .download');
+        var whichSectionClicked = "favorites-list";
         // console.log(removeFavoriteLinks);
 
         for (var i = 0; i < removeFavoriteLinks.length; i++) {
@@ -143,9 +143,11 @@ if (container) {
         // get clicked button and change its state[play, pause
         if (whichSectionClicked == "results-list") {
           var toChange = document.querySelector("span[res-list-icon-id='"+ response.activeAudio +"']");
+          // console.log( "results-list");
           // var toChange = document.getElementById(response.activeAudio).childNodes[1];
-        } else if (whichSectionClicked == "favorite-list") {
+        } else if (whichSectionClicked == "favorites-list") {
           var toChange = document.querySelector("span[fav-list-icon-id='"+ response.activeAudio +"']");
+          // console.log( "fav-list");
         }
         // var toChange = document.getElementById(response.activeAudio).childNodes[1];
         // var aa = "#"+response.activeAudio
@@ -224,14 +226,14 @@ if (container) {
     } // try end
   }
 
-  function getWhatPlayingNow(){
-    chrome.runtime.sendMessage({
-        user_action: "getWhatPlayingNow"
-    },
-    function(response){
-    document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
-    });
-  } // end getWhatPlayingNow
+  // function getWhatPlayingNow(){
+  //   chrome.runtime.sendMessage({
+  //       user_action: "getWhatPlayingNow"
+  //   },
+  //   function(response){
+  //   document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
+  //   });
+  // } // end getWhatPlayingNow
 
 
   function download(target) {
@@ -298,7 +300,14 @@ if (container) {
 
       function(response) {
         if (!(response.activeAudio === undefined)) {
-          var audioLinks = document.querySelectorAll('.action');
+          var whatIsActiveList = response.whatIsActiveList;
+          // alert(whatIsActiveList);
+          if (whatIsActiveList == 'favorites-list') {
+            var audioLinks = document.querySelectorAll('#list-favorites-list .action');
+          } else if (whatIsActiveList == 'results-list') {
+            var audioLinks = document.querySelectorAll('#list-results-list .action');
+          }
+          // var audioLinks = document.querySelectorAll('.action');
           var activeAudio = response.activeAudio;
           for (var i = 0; i < audioLinks.length; i++) {
             if (audioLinks[i].id == activeAudio) {
@@ -311,9 +320,9 @@ if (container) {
 
   window.onload = function() {
     getSearchResultList();
-    getWhatPlayingNow();
     changeFavoriteIconsState();
     getFavoritesList();
+    getWhatPlayingNow();
     // checkInteractiveSearch();
     chrome.tabs.getSelected(null,function(tab) {
       // console.log(tab.title + ' t       u ' + tab.url);

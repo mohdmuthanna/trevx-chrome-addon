@@ -1,9 +1,11 @@
 var isPlaying = false;
 var isNewAudio = true;
 var activeAudio =''; // id of the audio
+var activeList =[];
+var whatIsActiveList = ''; // this var hold tow values as string "favorites-list" & "results-list"
 var audioState = '';
 var favoritesList = [];
-var whichSectionClicked = ''; // 'results-list' & 'favorite-list' these value will be bind to this var when user click play or pause
+var whichSectionClicked = ''; // 'results-list' & 'favorites-list' these value will be bind to this var when user click play or pause
 // alert(favoritesList.length);
 var l = new Audio();
 
@@ -14,7 +16,7 @@ if (typeof searchResultList === 'undefined') {
   // var favoritesLinks =
   var favoritesList = [];
   var isFoundResult = -1;
-  var searchResultAsPlaylist = [];
+  var listAsPlaylist = [];
   chrome.storage.local.get("searchResultList", function(data) {
       searchResultList = data["searchResultList"];
       // favoritesList = data["favoritesList"];
@@ -56,15 +58,15 @@ function removeFromFavorites(target){
 function playNextAudio(){
   var activeAudioPosition = -1;
   //get position of currnet audio
-  for (var i = 0; i < searchResultAsPlaylist.length; i++) {
-    if (searchResultAsPlaylist[i] == activeAudio) {
+  for (var i = 0; i < listAsPlaylist.length; i++) {
+    if (listAsPlaylist[i] == activeAudio) {
       activeAudioPosition = i;
       break;
     }
   }
-  if (activeAudioPosition+1 < searchResultAsPlaylist.length) {
-    l.src = getSrcById(searchResultAsPlaylist[activeAudioPosition+1]);
-    activeAudio = searchResultAsPlaylist[activeAudioPosition+1];
+  if (activeAudioPosition+1 < listAsPlaylist.length) {
+    l.src = getSrcById(listAsPlaylist[activeAudioPosition+1], activeList);
+    activeAudio = listAsPlaylist[activeAudioPosition+1];
     l.play();
   }
 
@@ -102,10 +104,10 @@ function removeRedundentResult(){
   searchResultList = searchResultList.reverse();
 };
 
-function makeSearchResultAsPlaylist(){
-  searchResultAsPlaylist = [];
-  for (var i = 0; i < searchResultList.length; i++) {
-    searchResultAsPlaylist[i] = searchResultList[i].id;
+function makeListAsPlaylist(list){
+  listAsPlaylist = [];
+  for (var i = 0; i < list.length; i++) {
+    listAsPlaylist[i] = list[i].id;
   }
 };
 
@@ -123,7 +125,7 @@ function callTrevxAPI(searchQueryValueEncoded){
     isFoundResult = searchResultList.indexOf("details:Data Returned Successfully");
   } catch (err) {
     searchResultList = [];
-    searchResultAsPlaylist = [];
+    listAsPlaylist = [];
   } // try end
 
   if (isFoundResult != -1) {
@@ -132,10 +134,10 @@ function callTrevxAPI(searchQueryValueEncoded){
     searchResultList = searchResultList +"]";
     searchResultList = JSON.parse(searchResultList);
     removeRedundentResult();
-    // makeSearchResultAsPlaylist();
+    // makeListAsPlaylist();
   } else{
     searchResultList = [];
-    searchResultAsPlaylist = [];
+    listAsPlaylist = [];
   }
 
   chrome.storage.local.set({'searchResultList': searchResultList}, function() {
@@ -144,18 +146,18 @@ function callTrevxAPI(searchQueryValueEncoded){
 }//end of callTrevxAPI
 
 // ruturn audio url to certain id
-function getSrcById(id){
-  for (var i = 0; i < searchResultList.length; i++) {
-    if (searchResultList[i].id == id) {
-      return searchResultList[i].link;
+function getSrcById(id, activeList){
+  for (var i = 0; i < activeList.length; i++) {
+    if (activeList[i].id == id) {
+      return activeList[i].link;
     }
   }
 }
 
 function getWhatPlayingNow(){
   if (!(searchResultList === undefined)) {
-    for (var i = 0; i < searchResultList.length; i++) {
-        if (!l.paused && (searchResultList[i].id == activeAudio)) {
+    for (var i = 0; i < activeList.length; i++) {
+        if (!l.paused && (activeList[i].id == activeAudio)) {
           return activeAudio;
         }
     }
@@ -173,7 +175,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     chrome.storage.local.get("searchResultList", function(data) {
         searchResultList = data["searchResultList"];
       });
-        makeSearchResultAsPlaylist();
+        // makeListAsPlaylist(searchResultList);
     sendResponse({
         searchResultList: searchResultList
     });
@@ -209,6 +211,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
   else if (request.user_action == 'getWhatPlayingNow') {
     sendResponse({
+      whatIsActiveList: whatIsActiveList,
         activeAudio: getWhatPlayingNow()
     });
     return true;
@@ -217,15 +220,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     window.open(request.audio_url);
   }
   else if (request.user_action == "playPause") {
-    whichSectionClicked = request.whichSectionClicked;
-    // alert("play pause");
-    // check if the recusted audio is new or not
+    if (request.whichSectionClicked == "favorites-list") {
+      makeListAsPlaylist(favoritesList);
+      activeList = favoritesList;
+      whatIsActiveList = "favorites-list";
+
+      // alert("fav");
+    } else if (request.whichSectionClicked == "results-list") {
+      makeListAsPlaylist(searchResultList);
+      activeList = searchResultList;
+      whatIsActiveList = "results-list";
+    }
+        // check if the recusted audio is new or not
+    // makeListAsPlaylist(searchResultList);
     if (activeAudio == request.audio_id) {
       isNewAudio = false;
     } else {
       isNewAudio = true;
     }
-
+    // whichSectionClicked = request.whichSectionClicked;
     //check if audio is finished take it back to start
     if (l.currentTime == l.duration){
       l.currentTime = 0;
@@ -234,7 +247,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     //check if the requsetd audio is new(not paused track),//if you remove this the audio file start from 0 even it paused.
     if ((activeAudio != request.audio_id)  ){
-      l.src = getSrcById(request.audio_id);
+      l.src = getSrcById(request.audio_id, activeList);
     }
 
         //pause

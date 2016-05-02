@@ -135,7 +135,7 @@ input:-webkit-autofill {
 .content .results-list {
 	float: left;
 }
-.content .favorite-list {
+.content .favorites-list {
 	float: right;
 }
 .content .list li {
