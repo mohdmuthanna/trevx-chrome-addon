@@ -126,17 +126,20 @@ if (container) {
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
-        favoritesList = response.favoritesList;
-        // console.log(favoritesList);
-        var favoriteIcons = document.querySelectorAll('.favorite');
-        for (var i = 0; i < favoriteIcons.length; i++) {
-          for (var j = 0; j < favoritesList.length; j++) {
-            if (favoritesList[j].id == favoriteIcons[i].getAttribute("fav-id")) {
-              favoriteIcons[i].setAttribute("class", "favorite active");
-              // favoritesList.splice( j, 1 );
+        if (response.favoritesList !== undefined) {
+          favoritesList = response.favoritesList;
+          // console.log(favoritesList);
+          var favoriteIcons = document.querySelectorAll('.favorite');
+          for (var i = 0; i < favoriteIcons.length; i++) {
+            for (var j = 0; j < favoritesList.length; j++) {
+              if (favoritesList[j].id == favoriteIcons[i].getAttribute("fav-id")) {
+                favoriteIcons[i].setAttribute("class", "favorite active");
+                // favoritesList.splice( j, 1 );
+              }
             }
           }
         }
+
       })
       console.log(favoritesList);
 
@@ -184,7 +187,7 @@ if (container) {
         // var toChangeFavIcon = document.querySelecto
         var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
         // console.log("toChangeFavIcon= " + toChangeFavIcon);
-        console.log("isFavored= " + response.isFavored);
+        // console.log("isFavored= " + response.isFavored);
 
         // not used
         // if (response.isFavored == -1) {

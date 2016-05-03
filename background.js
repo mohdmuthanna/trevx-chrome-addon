@@ -4,34 +4,45 @@ var activeAudio =''; // id of the audio
 var activeList =[];
 var whatIsActiveList = ''; // this var hold tow values as string "favorites-list" & "results-list"
 var audioState = '';
-var favoritesList = [];
 var whichSectionClicked = ''; // 'results-list' & 'favorites-list' these value will be bind to this var when user click play or pause
-// alert(favoritesList.length);
 var l = new Audio();
+var favoritesList =[];
+var isFoundResult = -1;
+var listAsPlaylist = [];
+// var isFavored = -1;
+chrome.storage.local.get("favoritesList", function(data) {
+    favoritesList = data["favoritesList"];
+  });
+  // if (typeof favoritesList === 'undefined') {
+  //   favoritesList =[];
+  //   // alert(favoritesList);
+  //   chrome.storage.local.set({'favoritesList': favoritesList}, function() {
+  //           });
+  // }
+chrome.storage.local.get("searchResultList", function(data) {
+    searchResultList = data["searchResultList"];
+  });
 
+  // chrome.storage.local.set({'favoritesList': searchResultList}, function() {
+  //         });
 
-// first run, define searchResultList
-if (typeof searchResultList === 'undefined') {
-  // var searchResultList =[];
-  // var favoritesLinks =
-  var favoritesList = [];
-  var isFoundResult = -1;
-  var listAsPlaylist = [];
-  chrome.storage.local.get("searchResultList", function(data) {
-      searchResultList = data["searchResultList"];
-      // favoritesList = data["favoritesList"];
-    });
-    // chrome.storage.local.set({'favoritesList': searchResultList}, function() {
-    //         });
-}
 
 function checkIfFavored(target){
-  for (var i = 0; i < favoritesList.length; i++) {
-    if (favoritesList[i].id == target) {
-      return [i];
+  // try {
+  if (typeof favoritesList === 'undefined') {
+    favoritesList =[];
+    return -1;
+  } else {
+    for (var i = 0; i < favoritesList.length; i++) {
+      if (favoritesList[i].id == target) {
+        return [i];
+      }
     }
+    return -1;
   }
-  return -1;
+  // } catch (e) {
+    // alert("43");
+  // }
 }
 
 function addToFavorites(target){
@@ -40,17 +51,18 @@ function addToFavorites(target){
       var active = i;
     }
   }
+  // if (typeof favoritesList === 'undefined') {
+  //   favoritesList =[];
+  // }
   var element = searchResultList[active];
   favoritesList.push(element);
-  // chrome.storage.local.set({'favoritesList': favoritesList}, function() {
-  //         });
+  // alert(favoritesList);
 } // add to favorite
 
 function removeFromFavorites(target){
   for (var i = 0; i < favoritesList.length; i++) {
     if (favoritesList[i].id == target) {
       favoritesList.splice( i, 1 );
-
     }
   }
 }
@@ -188,21 +200,31 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   } else if (request.user_action == 'favoritesListAddRemove') {
       var target = request.audio_fav_id;
-      var isFavored = checkIfFavored(target);
-      // alert(isFavored);
+        isFavored = checkIfFavored(target);
+        if (isFavored == -1) {
+          addToFavorites(target);
 
-      if (isFavored == -1) {
-        addToFavorites(target);
-      } else {
-        removeFromFavorites(target);
-      }
+          // alert(favoritesList);
+        } else {
+          // alert("else");
+          removeFromFavorites(target);
+        }
+
+      chrome.storage.local.set({'favoritesList': favoritesList}, function() {
+              });
       // alert(favoritesList);
-      sendResponse({
-          favoritesList: favoritesList,
-          isFavored : isFavored
-      });
+      // sendResponse({
+      //     favoritesList: favoritesList,
+      //     isFavored : isFavored
+      // });
 
   } else if (request.user_action == "getFavoritesList") {
+    // if (typeof favoritesList === 'undefined') {
+    //   var favoritesList =[];
+    //   // alert(favoritesList);
+    //   chrome.storage.local.set({'favoritesList': favoritesList}, function() {
+    //           });
+    // }
     sendResponse({
         favoritesList : favoritesList
     });
