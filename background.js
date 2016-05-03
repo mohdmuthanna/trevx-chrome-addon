@@ -13,22 +13,11 @@ var listAsPlaylist = [];
 chrome.storage.local.get("favoritesList", function(data) {
     favoritesList = data["favoritesList"];
   });
-  // if (typeof favoritesList === 'undefined') {
-  //   favoritesList =[];
-  //   // alert(favoritesList);
-  //   chrome.storage.local.set({'favoritesList': favoritesList}, function() {
-  //           });
-  // }
 chrome.storage.local.get("searchResultList", function(data) {
     searchResultList = data["searchResultList"];
   });
 
-  // chrome.storage.local.set({'favoritesList': searchResultList}, function() {
-  //         });
-
-
 function checkIfFavored(target){
-  // try {
   if (typeof favoritesList === 'undefined') {
     favoritesList =[];
     return -1;
@@ -40,9 +29,6 @@ function checkIfFavored(target){
     }
     return -1;
   }
-  // } catch (e) {
-    // alert("43");
-  // }
 }
 
 function addToFavorites(target){
@@ -51,12 +37,8 @@ function addToFavorites(target){
       var active = i;
     }
   }
-  // if (typeof favoritesList === 'undefined') {
-  //   favoritesList =[];
-  // }
   var element = searchResultList[active];
   favoritesList.push(element);
-  // alert(favoritesList);
 } // add to favorite
 
 function removeFromFavorites(target){
@@ -203,32 +185,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         isFavored = checkIfFavored(target);
         if (isFavored == -1) {
           addToFavorites(target);
-
-          // alert(favoritesList);
         } else {
-          // alert("else");
           removeFromFavorites(target);
         }
 
       chrome.storage.local.set({'favoritesList': favoritesList}, function() {
               });
-      // alert(favoritesList);
-      // sendResponse({
-      //     favoritesList: favoritesList,
-      //     isFavored : isFavored
-      // });
 
   } else if (request.user_action == "getFavoritesList") {
-    // if (typeof favoritesList === 'undefined') {
-    //   var favoritesList =[];
-    //   // alert(favoritesList);
-    //   chrome.storage.local.set({'favoritesList': favoritesList}, function() {
-    //           });
-    // }
     sendResponse({
         favoritesList : favoritesList
     });
-    // alert(favoritesList);
     return true;
   }
   else if (request.user_action == 'getWhatPlayingNow') {
@@ -247,7 +214,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       activeList = favoritesList;
       whatIsActiveList = "favorites-list";
 
-      // alert("fav");
     } else if (request.whichSectionClicked == "results-list") {
       makeListAsPlaylist(searchResultList);
       activeList = searchResultList;

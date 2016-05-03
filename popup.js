@@ -16,7 +16,7 @@ if (container) {
     }
     return imgUrl;
   }
-  //timer
+  //timer // not used
   function stateChange(newState) {
     setTimeout(function () {
         if (newState == -1) {
@@ -44,9 +44,6 @@ if (container) {
         }
       } else {
         links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
-        // stateChange(-1);
-        // document.getElementById("results-cover").setAttribute("class", "")
-        // links = "<div class=\"msg msg2\">No result found, please try another word(s).</div>";
       }
       // links = "<ul>" + links + "</ul>"
     } else if (!navigator.onLine) {
@@ -86,7 +83,6 @@ if (container) {
   }
 
   function getFavoritesList(){
-    // console.log(favoritesList);
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
@@ -95,18 +91,15 @@ if (container) {
         var audioLinks = document.querySelectorAll('.favorites-list .action');
         var downloadLinks = document.querySelectorAll('.favorites-list .download');
         var whichSectionClicked = "favorites-list";
-        // console.log(removeFavoriteLinks);
 
         for (var i = 0; i < removeFavoriteLinks.length; i++) {
             removeFavoriteLinks[i].addEventListener('click', function(event) {
-              console.log( this);
                 favoritesListAddRemove(this.getAttribute("del-id"));
             });
         }
 
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
-              // console.log('i click play  = ' + this);
                 playPause(this , whichSectionClicked);
             });
         }
@@ -128,7 +121,6 @@ if (container) {
       }, function(response) {
         if (response.favoritesList !== undefined) {
           favoritesList = response.favoritesList;
-          // console.log(favoritesList);
           var favoriteIcons = document.querySelectorAll('.favorite');
           for (var i = 0; i < favoriteIcons.length; i++) {
             for (var j = 0; j < favoritesList.length; j++) {
@@ -141,7 +133,6 @@ if (container) {
         }
 
       })
-      console.log(favoritesList);
 
   } // changeFavoriteIconsState
 
@@ -157,17 +148,11 @@ if (container) {
         // get clicked button and change its state[play, pause
         if (whichSectionClicked == "results-list") {
           var toChange = document.querySelector("span[res-list-icon-id='"+ response.activeAudio +"']");
-          // console.log( "results-list");
-          // var toChange = document.getElementById(response.activeAudio).childNodes[1];
         } else if (whichSectionClicked == "favorites-list") {
           var toChange = document.querySelector("span[fav-list-icon-id='"+ response.activeAudio +"']");
-          // console.log( "fav-list");
         }
-        // var toChange = document.getElementById(response.activeAudio).childNodes[1];
-        // var aa = "#"+response.activeAudio
-        // var toChange2 = document.querySelectorAll(' + aa +');
+
         var icons = document.querySelectorAll("div#trevx-lists .icon");
-        console.log(toChange);
         if (response.isPlaying){
           for (var i = 0; i < icons.length; i++) {
             icons[i].setAttribute("class", "icon play");
@@ -186,15 +171,7 @@ if (container) {
       }, function(response) {
         // var toChangeFavIcon = document.querySelecto
         var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
-        // console.log("toChangeFavIcon= " + toChangeFavIcon);
-        // console.log("isFavored= " + response.isFavored);
 
-        // not used
-        // if (response.isFavored == -1) {
-        //   // toChangeFavIcon.setAttribute('class', 'favorite active');
-        // } else {
-        //   // toChangeFavIcon.setAttribute('class', 'favorite');
-        // }
         getFavoritesList();
         getSearchResultList();
         changeFavoriteIconsState();
@@ -240,16 +217,6 @@ if (container) {
     } // try end
   }
 
-  // function getWhatPlayingNow(){
-  //   chrome.runtime.sendMessage({
-  //       user_action: "getWhatPlayingNow"
-  //   },
-  //   function(response){
-  //   document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
-  //   });
-  // } // end getWhatPlayingNow
-
-
   function download(target) {
     chrome.runtime.sendMessage({
         user_action: "download",
@@ -270,14 +237,12 @@ if (container) {
         var whichSectionClicked = "results-list";
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
-              // console.log('i click  = ' + this);
                 playPause(this, whichSectionClicked);
             });
         }
 
         for (var i = 0; i < favoritesLinks.length; i++) {
             favoritesLinks[i].addEventListener('click', function(event) {
-              // console.log("test  " + this.getAttribute("fav-id"))
               favoritesListAddRemove(this.getAttribute("fav-id"));
             });
         }
@@ -301,8 +266,6 @@ if (container) {
         user_action: "searchButtonClicked",
         searchQueryValueEncoded: searchQueryValueEncoded
       }, function(response) {
-        // loading.setAttribute("class", "loading hidden");
-        // getSearchResultList();
       })
     }
   }
@@ -315,13 +278,11 @@ if (container) {
       function(response) {
         if (!(response.activeAudio === undefined)) {
           var whatIsActiveList = response.whatIsActiveList;
-          // alert(whatIsActiveList);
           if (whatIsActiveList == 'favorites-list') {
             var audioLinks = document.querySelectorAll('#list-favorites-list .action');
           } else if (whatIsActiveList == 'results-list') {
             var audioLinks = document.querySelectorAll('#list-results-list .action');
           }
-          // var audioLinks = document.querySelectorAll('.action');
           var activeAudio = response.activeAudio;
           for (var i = 0; i < audioLinks.length; i++) {
             if (audioLinks[i].id == activeAudio) {
@@ -337,7 +298,6 @@ if (container) {
     changeFavoriteIconsState();
     getFavoritesList();
     getWhatPlayingNow();
-    // checkInteractiveSearch();
     chrome.tabs.getSelected(null,function(tab) {
       // console.log(tab.title + ' t       u ' + tab.url);
     });
