@@ -3,6 +3,7 @@ var container = document.getElementById('trevx-lists');
 // var favoritesList =[];
 
 if (container) {
+  document.querySelector(".search .field").focus();
   var favoritesList =[];
   function getAudioTitle(title){
     if (title.length > 40){
