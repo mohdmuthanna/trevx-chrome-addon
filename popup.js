@@ -39,7 +39,7 @@ if (container) {
                     // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
                     + "<a class='title' title-id='"+searchResultList[i].id+"' title='"+searchResultList[i].title+"'>"+ getAudioTitle(searchResultList[i].title)+"</a>"
                     // + "<p>"+ searchResultList[i].title +"</p>"
-                    + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
+                    // + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
                     + "<a class='favorite' fav-id='"+searchResultList[i].id+"'href='#'></a>"
                     + "</li>";
         }
@@ -73,7 +73,7 @@ if (container) {
                   + "<a class='title' title-id='"+favoritesList[i].id+"' title='"+favoritesList[i].title+"'>"+ getAudioTitle(favoritesList[i].title)+"</a>"
                   // + "<p>"+ favoritesList[i].title +"</p>"
                   +"<a href='#' del-id='"+favoritesList[i].id+"' class='remove'>X</a>"
-                  + "<a class='download' href='"+favoritesList[i].downloadUrl+"'>"
+                  // + "<a class='download' href='"+favoritesList[i].downloadUrl+"'>"
                   +"</li>";
         }
          return links;
