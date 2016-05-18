@@ -7,13 +7,20 @@
 <meta name="description" content="Trevx is an audio search engine where You can search and download all types of audio files, you can download music, audio books, sound effects and soundtracks">
 <meta name="keywords" content="by,vevo,Free songs,download,trending,wav,station,live,Featured,top songs">
 <link href="css/setting.css" rel="stylesheet" type="text/css">
+<!-- <link href="css/awesomplete.css"rel="stylesheet" type="text/css"/> -->
+<link rel="stylesheet" href="css/easy-autocomplete.min.css">
+<!-- <link rel="stylesheet" href="css/easy-autocomplete.themes.min.css"> -->
 </head>
 <body>
 <div class="trevx-chrome-popup">
-  <div class="header"> <a href="http://trevx.com" class="logo" title="Trevx.com"><img src="images/logo.png" alt="Trevx.com" width="64" height="20"></a> <span class="sep"></span>
+  <div class="header"> <a href="http://trevx.com" class="logo" title="trevx.com"><img src="images/logo.png" alt="Trevx.com" width="64" height="20"></a> <span class="sep"></span>
     <div class="search">
       <form class="" action="" method="post">
-        <input type="text" dir="auto" id='trevx-search-box' placeholder="Search Trevx" class="field" required>
+        <span class="remote">
+          <input type="text" dir="auto" id='trevx-search-box' placeholder="Search Trevx" class="field typeahead"
+          data-list="" autocomplete="off" required>
+        </span>
+
         <input type="submit" id='trevx-search-button' value="" class="submit">
       </form>
     </div>
@@ -51,9 +58,20 @@
     <!-- <div class="msg msg1">Check your internet connection, and please try again later.</div> -->
 
   </div>
+  <div id="suggesstion-box">
+
+  </div>
 </div>
-<script src="js/jquery-1.11.2.min.js"></script>
-<script src="js/script.js"></script>
-<script type="text/javascript" src="popup.js"></script>
+<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+<!-- <script src="js/jquery-1.10.2.js"></script> -->
+<script src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/popup.js"></script>
+<!-- <script type="text/javascript" src="js/jquery.easy-autocomplete.min.js"></script> -->
+<script src="js/typeahead.js"></script>
+
+<!-- <script type="text/javascript" src="js/complete.ly.1.0.1.min.js"></script> -->
+<!-- <script type="text/javascript" src="js/awesomplete.js"></script> -->
+
 </body>
 </html>

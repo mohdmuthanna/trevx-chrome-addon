@@ -1,10 +1,10 @@
 {
   "name": "Trevx Music Player",
-  "version": "0.2.2",
-  "version_name": "0.2.2",
+  "version": "0.3.1",
+  "version_name": "0.3.1",
   "description": "Instant Music Listening Experience, turn your chrome browser into music player",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["js/background.js"]
   },
 
   "browser_action": {
@@ -19,14 +19,42 @@
     "64" : "images/64.png",
     "128" : "images/64.png"
   },
+  "omnibox": { "keyword" : "t" },
+  "commands": {
+    "playPause": {
+      "suggested_key": {
+        "windows": "Alt+P",
+        "mac": "Alt+P",
+        "chromeos": "Alt+P",
+        "linux": "Alt+P"
+      },
+      "description": "Play or Pause the current audio truck"
+    },
+    "playNext": {
+      "suggested_key": {
+        "windows": "Alt+P",
+        "mac": "Alt+P",
+        "chromeos": "Alt+P",
+        "linux": "Alt+P"
+      },
+      "description": "Go to the next audio truck"
+    },
+    "palyPrevious": {
+      "suggested_key": {
+        "windows": "Alt+Shift+N",
+        "mac": "Alt+Shift+N",
+        "chromeos": "Alt+Shift+N",
+        "linux": "Alt+Shift+N"
+      },
+      "description": "Go to the previous audio truck"
+    }
+  },
+
   "homepage_url": "http://trevx.com/",
   "permissions": [
-    "activeTab",
     "*://trevx.com/*",
-    "storage",
-    "webRequest"
-
-
+    "https://sb-ssl.google.com/safebrowsing/api/*",
+    "storage"
   ],
   "manifest_version": 2
 }
