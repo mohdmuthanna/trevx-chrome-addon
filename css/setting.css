@@ -258,6 +258,11 @@ input:-webkit-autofill {
 
 
 /*by mohd*/
+
+.results-list li .title:hover, .favorites-list li .title:hover{
+	cursor:pointer;
+}
+
 .ui-autocomplete{
 	position: absolute;
 	top: 24px;
@@ -277,9 +282,6 @@ input:-webkit-autofill {
     background:#dedede;
     outline:none;
 }
-/*.ui-autocomplete li:nth-of-type(odd) {
-	background: #0000ff;
-}*/
 /*when mouse hover the suggestion result list a message will printed */
 /*dont display this message*/
 .ui-helper-hidden-accessible:last-child{

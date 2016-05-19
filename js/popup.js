@@ -86,7 +86,7 @@ if (container) {
                     +   "<span res-list-icon-id='"+searchResultList[i].id+"' class='icon play'></span>"
                     +"</a>"
                     // + "<a class='title' id='"+searchResultList[i].id+"' href='"+searchResultList[i].link+"'>"+ searchResultList[i].title+"</a>"
-                    + "<a class='title' title-id='"+searchResultList[i].id+"' title='"+searchResultList[i].title+"'>"+ getAudioTitle(searchResultList[i].title)+"</a>"
+                    + "<a class='title' id='"+searchResultList[i].id+"' title='"+searchResultList[i].title+"'>"+ getAudioTitle(searchResultList[i].title)+"</a>"
                     // + "<p>"+ searchResultList[i].title +"</p>"
                     // + "<a class='download' href='"+searchResultList[i].downloadUrl+"'>"
                     + "<a class='favorite' title='Add to favorites' fav-id='"+searchResultList[i].id+"'href='#'></a>"
@@ -119,7 +119,7 @@ if (container) {
                   +   "<img src='"+ getAudioImage(favoritesList[i].image) +"' width='40' height='40'>"
                   +   "<span fav-list-icon-id='"+favoritesList[i].id+"' class='icon play'></span>"
                   +"</a>"
-                  + "<a class='title' title-id='"+favoritesList[i].id+"' title='"+favoritesList[i].title+"'>"+ getAudioTitle(favoritesList[i].title)+"</a>"
+                  + "<a class='title' id='"+favoritesList[i].id+"' title='"+favoritesList[i].title+"'>"+ getAudioTitle(favoritesList[i].title)+"</a>"
                   // + "<p>"+ favoritesList[i].title +"</p>"
                   +"<a href='#' del-id='"+favoritesList[i].id+"' class='remove'>X</a>"
                   // + "<a class='download' href='"+favoritesList[i].downloadUrl+"'>"
@@ -140,6 +140,8 @@ if (container) {
         var removeFavoriteLinks = document.querySelectorAll('.favorites-list .remove');
         var audioLinks = document.querySelectorAll('.favorites-list .action');
         var downloadLinks = document.querySelectorAll('.favorites-list .download');
+        var titlesLinks = document.querySelectorAll('.favorites-list .title');
+
         var whichSectionClicked = "favorites-list";
 
         for (var i = 0; i < removeFavoriteLinks.length; i++) {
@@ -160,6 +162,9 @@ if (container) {
                 download(this);
             });
         }
+        $(titlesLinks).click(function() {
+          playPause(this, whichSectionClicked);
+        });
 
       })
   }
@@ -285,7 +290,9 @@ if (container) {
         var audioLinks = document.querySelectorAll('.results-list .action');
         var downloadLinks = document.querySelectorAll('.results-list .download');
         var favoritesLinks = document.querySelectorAll('.results-list .favorite');
+        var titlesLinks = document.querySelectorAll('.results-list .title');
         var whichSectionClicked = "results-list";
+
         for (var i = 0; i < audioLinks.length; i++) {
             audioLinks[i].addEventListener('click', function(event) {
                 playPause(this, whichSectionClicked);
@@ -303,6 +310,9 @@ if (container) {
                 download(this);
             });
         }
+        $(titlesLinks).click(function() {
+          playPause(this, whichSectionClicked);
+        });
       }); // end of response
   }  // getSearchResultList function
 

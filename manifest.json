@@ -13,6 +13,7 @@
     "default_icon": "images/welcome.png",
     "default_popup": "popup.html"
   },
+
   "icons": {
     "16" : "images/64.png",
     "48" : "images/64.png",
@@ -28,16 +29,16 @@
         "chromeos": "Alt+P",
         "linux": "Alt+P"
       },
-      "description": "Play or Pause the current audio truck"
+      "description": "Play/Pause"
     },
     "playNext": {
       "suggested_key": {
-        "windows": "Alt+P",
-        "mac": "Alt+P",
-        "chromeos": "Alt+P",
-        "linux": "Alt+P"
+        "windows": "Alt+N",
+        "mac": "Alt+N",
+        "chromeos": "Alt+N",
+        "linux": "Alt+N"
       },
-      "description": "Go to the next audio truck"
+      "description": "Play next"
     },
     "palyPrevious": {
       "suggested_key": {
@@ -46,15 +47,17 @@
         "chromeos": "Alt+Shift+N",
         "linux": "Alt+Shift+N"
       },
-      "description": "Go to the previous audio truck"
+      "description": "Play previous"
     }
   },
+
 
   "homepage_url": "http://trevx.com/",
   "permissions": [
     "*://trevx.com/*",
     "https://sb-ssl.google.com/safebrowsing/api/*",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "manifest_version": 2
 }

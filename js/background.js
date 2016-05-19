@@ -99,6 +99,11 @@ l.onended = function() {
 
 l.onerror = function(){
   playNextAudio();
+  url = "http://goo.gl/bydJoj";
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url , true);
+  xhr.send(null);
+  alert(xhr.responseText);
 };
 
 l.onplaying = function(){
@@ -365,3 +370,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   };
 
 }); // end of listener
+
+// Action menue options
+chrome.contextMenus.create({
+      title: "Help",
+      contexts: ["browser_action"],
+      onclick: function() {
+        window.open("help/index.html");
+      }
+});
+chrome.contextMenus.create({
+      title: "About us",
+      contexts: ["browser_action"],
+      onclick: function() {
+        window.open("http://trevx.com/about-us.php");
+      }
+});
+chrome.contextMenus.create({
+      title: "Keyboard Shortcuts",
+      contexts: ["browser_action"],
+      onclick: function() {
+        window.open("help/index.html#block6");
+      }
+});
