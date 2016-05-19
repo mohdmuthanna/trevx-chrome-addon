@@ -9,13 +9,31 @@ if (container) {
   }
   document.querySelector('#trevx-search-box').addEventListener('keyup', function (e) {
     var query = document.getElementById("trevx-search-box").value;
+    var suggResults = "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";
+    // suggResults = suggResults.slice(0,suggResults.length - 4);
+    // console.log(suggResults);
     $( "#trevx-search-box" ).autocomplete({
-      source: "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json",
-      showNoSuggestionNotice: false,
+      source: suggResults,
+      // source: trevxSuggetionAPI(query),
       minLength: 2,
+      messages: {
+        noResults: '',
+        results: function() {}
+      },
       // deferRequestBy:0
-    });
+    }).focus(function(){});
     $('.search .field').focus();
+    // var options = {
+  	// url: function(phrase) {
+  	// 	return "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";
+  	// },
+    //
+    //
+    // };
+    //
+    // $("#trevx-search-box").easyAutocomplete(options);
+    // console.log(options);
+    // $('.search .field').focus();
   });
 
   //not used

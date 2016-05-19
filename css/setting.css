@@ -267,7 +267,9 @@ input:-webkit-autofill {
 }
 
 .ui-menu-item {
+	/*position: relative;*/
 	list-style-type: none;
+	 /*z-index: 3;*/
 }
 
 .ui-state-focus
@@ -275,8 +277,13 @@ input:-webkit-autofill {
     background:#dedede;
     outline:none;
 }
-.ui-autocomplete li:nth-of-type(odd) {
+/*.ui-autocomplete li:nth-of-type(odd) {
 	background: #0000ff;
+}*/
+/*when mouse hover the suggestion result list a message will printed */
+/*dont display this message*/
+.ui-helper-hidden-accessible:last-child{
+	display: none;
 }
 
 /*@font-face {
