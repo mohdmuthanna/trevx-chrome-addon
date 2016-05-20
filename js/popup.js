@@ -7,22 +7,54 @@ if (container) {
   document.querySelector(".logo").onclick = function() {
     window.open("http://trevx.com/");
   }
-  document.querySelector('#trevx-search-box').addEventListener('keyup', function (e) {
-    var query = document.getElementById("trevx-search-box").value;
-    var suggResults = "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";
-    // suggResults = suggResults.slice(0,suggResults.length - 4);
-    // console.log(suggResults);
-    $( "#trevx-search-box" ).autocomplete({
-      source: suggResults,
-      // source: trevxSuggetionAPI(query),
+
+
+/*
+  function getGoogleChecks(urls, callback) {
+    var stringUrls = urls.join('\n');
+
+    var googleUrl = 'https://hello.com/' + stringUrls;
+    $.get(googleUrl, function (data) {
+      callback(data);
+    });
+  };
+
+  getGoogleChecks('omardo.com', function (data) {
+    console.log(data);
+  });
+*/
+
+  // jQuery onload
+  $(function () {
+    $("#trevx-search-box").autocomplete({
+      source: function (request, response) {
+        var suggestionUrl = "http://trevx.com/v1/suggestion/" + encodeURIComponent(request.term) + "/?format=json";
+        $.getJSON(suggestionUrl, function (data) {
+          var searchTerms = data.slice(0, data.length- 4);
+          console.log('searchTerms', searchTerms);
+          response(searchTerms);
+        });
+      },
+      select: function( event, ui ) {
+        console.log('selected:', ui.item.value);
+      },
       minLength: 2,
+      //remove results status message
       messages: {
         noResults: '',
         results: function() {}
       },
-      // deferRequestBy:0
-    }).focus(function(){});
-    $('.search .field').focus();
+    })
+  });
+
+  // not used
+  document.querySelector('#trevx-search-box').addEventListener('keyup', function (e) {
+    // var query = document.getElementById("trevx-search-box").value;
+    // var suggResults = "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";
+    // suggResults = suggResults.slice(0,suggResults.length - 4);
+    // console.log(suggResults);
+    // .focus(function(){});
+    // $('.search .field').focus();
     // var options = {
   	// url: function(phrase) {
   	// 	return "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";

@@ -274,6 +274,7 @@ input:-webkit-autofill {
 .ui-menu-item {
 	/*position: relative;*/
 	list-style-type: none;
+	max-width: 270px;
 	 /*z-index: 3;*/
 }
 
