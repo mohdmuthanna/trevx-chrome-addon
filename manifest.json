@@ -57,7 +57,8 @@
     "*://trevx.com/*",
     "https://sb-ssl.google.com/safebrowsing/api/*",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "activeTab"
   ],
   "manifest_version": 2
 }
