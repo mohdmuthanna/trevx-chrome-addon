@@ -37,8 +37,7 @@ if (container) {
       },
       // on select suggestion item do
       select: function( event, ui ) {
-        // console.log('selected:', ui.item.value);
-        // searchForAQuery(ui.item.value);
+        searchForAQuery(ui.item.value);
       },
       minLength: 2,
       //remove results status message
@@ -121,7 +120,7 @@ if (container) {
 
   function createFavoriteLines(favoritesList){
     var links = '';
-    if (!(favoritesList === undefined)) {
+    if (favoritesList[0] != null) {
       // to view or hidden favorite coler
       var toChange = document.getElementById("cover-favorite-cover");
       if (favoritesList.length > 0) {
@@ -141,6 +140,8 @@ if (container) {
          return links;
       } else {
         toChange.setAttribute("style", "");
+        // links = [];
+        // return links;
       }
     }
   }
@@ -149,45 +150,48 @@ if (container) {
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
-        document.getElementById("list-favorites-list").innerHTML = createFavoriteLines(response.favoritesList);
-        var removeFavoriteLinks = document.querySelectorAll('.favorites-list .remove');
-        var audioLinks = document.querySelectorAll('.favorites-list .action');
-        var downloadLinks = document.querySelectorAll('.favorites-list .download');
-        var titlesLinks = document.querySelectorAll('.favorites-list .title');
 
-        var whichSectionClicked = "favorites-list";
+        if (response.favoritesList.length != 0) {
+          document.getElementById("list-favorites-list").innerHTML = createFavoriteLines(response.favoritesList);
+          var removeFavoriteLinks = document.querySelectorAll('.favorites-list .remove');
+          var audioLinks = document.querySelectorAll('.favorites-list .action');
+          var downloadLinks = document.querySelectorAll('.favorites-list .download');
+          var titlesLinks = document.querySelectorAll('.favorites-list .title');
+          var whichSectionClicked = "favorites-list";
+          for (var i = 0; i < removeFavoriteLinks.length; i++) {
+              removeFavoriteLinks[i].addEventListener('click', function(event) {
+                  favoritesListAddRemove(this.getAttribute("del-id"));
+              });
+          }
 
-        for (var i = 0; i < removeFavoriteLinks.length; i++) {
-            removeFavoriteLinks[i].addEventListener('click', function(event) {
-                favoritesListAddRemove(this.getAttribute("del-id"));
-            });
+          for (var i = 0; i < audioLinks.length; i++) {
+              audioLinks[i].addEventListener('click', function(event) {
+                  playPause(this , whichSectionClicked);
+              });
+          }
+
+
+          for (var i = 0; i < downloadLinks.length; i++) {
+              downloadLinks[i].addEventListener('click', function(event) {
+                  download(this);
+              });
+          }
+          $(titlesLinks).click(function() {
+            playPause(this, whichSectionClicked);
+          });
+        } else {
+          //view favorite cover
+          document.getElementById("cover-favorite-cover").setAttribute("style", "");
         }
-
-        for (var i = 0; i < audioLinks.length; i++) {
-            audioLinks[i].addEventListener('click', function(event) {
-                playPause(this , whichSectionClicked);
-            });
-        }
-
-
-        for (var i = 0; i < downloadLinks.length; i++) {
-            downloadLinks[i].addEventListener('click', function(event) {
-                download(this);
-            });
-        }
-        $(titlesLinks).click(function() {
-          playPause(this, whichSectionClicked);
-        });
-
       })
   }
 
   function changeFavoriteIconsState(){
-
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
-        if (response.favoritesList !== undefined) {
+        console.log(response.favoritesList[0] != null);
+        if (response.favoritesList[0] != null) {
           favoritesList = response.favoritesList;
           var favoriteIcons = document.querySelectorAll('.favorite');
           for (var i = 0; i < favoriteIcons.length; i++) {
@@ -239,7 +243,6 @@ if (container) {
       }, function(response) {
         // var toChangeFavIcon = document.querySelecto
         var toChangeFavIcon = document.querySelector("a[fav-id='"+ target +"']");
-
         getFavoritesList();
         getSearchResultList();
         changeFavoriteIconsState();
@@ -339,6 +342,12 @@ if (container) {
         user_action: "searchButtonClicked",
         searchQueryValueEncoded: searchQueryValueEncoded
       }, function(response) {
+        var loading = document.getElementById('loading-msg');
+        loading.setAttribute("class", "loading hidden");
+        getSearchResultList();
+        changeFavoriteIconsState();
+        // getFavoritesList();
+        getWhatPlayingNow();
       })
     }
   }

@@ -19,7 +19,11 @@ chrome.browserAction.setIcon({
 
 chrome.storage.local.get("favoritesList", function(data) {
     favoritesList = data["favoritesList"];
+    // if (typeof favoritesList === 'undefined') {
+    //   favoritesList = [];
+    // }
     removeMaliciousLink(favoritesList);
+    alert(favoritesList);
   });
 chrome.storage.local.get("searchResultList", function(data) {
     searchResultList = data["searchResultList"];
@@ -27,6 +31,9 @@ chrome.storage.local.get("searchResultList", function(data) {
   });
 
 function checkIfFavored(target){
+  chrome.storage.local.get("favoritesList", function(data) {
+      favoritesList = data["favoritesList"];
+    });
   if (typeof favoritesList === 'undefined') {
     favoritesList =[];
     return -1;
@@ -41,6 +48,9 @@ function checkIfFavored(target){
 }
 
 function addToFavorites(target){
+  chrome.storage.local.get("favoritesList", function(data) {
+      favoritesList = data["favoritesList"];
+    });
   for (var i = 0; i < searchResultList.length; i++) {
     if (searchResultList[i].id == target) {
       var active = i;
@@ -227,7 +237,7 @@ function getSrcById(id, activeList){
 }
 
 function getWhatPlayingNow(){
-  if (!(searchResultList === undefined)) {
+  if (!(typeof searchResultList === 'undefined')) {
     for (var i = 0; i < activeList.length; i++) {
         if (!l.paused && (activeList[i].id == activeAudio)) {
           return activeAudio;
@@ -248,27 +258,43 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   } else if (request.user_action == "searchButtonClicked") {
     var searchQueryValueEncoded = request.searchQueryValueEncoded;
     callTrevxAPI(searchQueryValueEncoded);
+    sendResponse({
+        nothing : "nothing"
+    });
 
   } else if (request.user_action == "interactiveSearch") {
     callTrevxAPI(request.searchQueryValueEncoded);
+    sendResponse({
+        nothing : "nothing"
+    });
 
   } else if (request.user_action == 'favoritesListAddRemove') {
       var target = request.audio_fav_id;
-        isFavored = checkIfFavored(target);
-        if (isFavored == -1) {
-          addToFavorites(target);
-        } else {
-          removeFromFavorites(target);
-        }
+      // alert(typeof avoritesList === 'undefined');
+      chrome.storage.local.get("favoritesList", function(data) {
+          favoritesList = data["favoritesList"];
+        });
+      isFavored = checkIfFavored(target);
+      if (isFavored == -1) {
+        addToFavorites(target);
+      } else {
+        removeFromFavorites(target);
+      };
+      sendResponse({
+          nothing : "nothing"
+      });
 
       chrome.storage.local.set({'favoritesList': favoritesList}, function() {
               });
 
+
   } else if (request.user_action == "getFavoritesList") {
+    chrome.storage.local.get("favoritesList", function(data) {
+        favoritesList = data["favoritesList"];
+      });
     sendResponse({
         favoritesList : favoritesList
     });
-    return true;
   }
   else if (request.user_action == 'getWhatPlayingNow') {
     sendResponse({
@@ -282,6 +308,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
   else if (request.user_action == "playPause") {
     if (request.whichSectionClicked == "favorites-list") {
+      chrome.storage.local.get("favoritesList", function(data) {
+          favoritesList = data["favoritesList"];
+        });
       makeListAsPlaylist(favoritesList);
       activeList = favoritesList;
       whatIsActiveList = "favorites-list";
