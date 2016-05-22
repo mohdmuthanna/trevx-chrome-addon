@@ -16,6 +16,7 @@ var appver = '0.3.1';
 chrome.browserAction.setIcon({
   path : "images/welcome.png"
 });
+
 function getFavoritesListFromStorage(){
   chrome.storage.local.get("favoritesList", function(data) {
       favoritesList = data["favoritesList"];
@@ -23,7 +24,7 @@ function getFavoritesListFromStorage(){
         favoritesList =[];
       } else {
         try {
-          var test = favoritesList[0].id;
+          var test = favoritesList[0].title;
         } catch (e) {
           favoritesList =[];
         }
@@ -32,16 +33,18 @@ function getFavoritesListFromStorage(){
     });
     return favoritesList;
 }
-chrome.storage.local.get("favoritesList", function(data) {
-    favoritesList = data["favoritesList"];
-    removeMaliciousLink(favoritesList);
-  });
+
 chrome.storage.local.get("searchResultList", function(data) {
     searchResultList = data["searchResultList"];
-    removeMaliciousLink(searchResultList);
+    if (typeof searchResultList === "undefined") {
+      searchResultList = [];
+    } else {
+      removeMaliciousLink(searchResultList);
+    }
+
   });
 
-getFavoritesListFromStorage();
+favoritesList = getFavoritesListFromStorage();
 
 function checkIfFavored(target){
   if (typeof favoritesList === 'undefined') {
@@ -266,7 +269,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var searchQueryValueEncoded = request.searchQueryValueEncoded;
     callTrevxAPI(searchQueryValueEncoded);
     sendResponse({
-        nothing : "nothing"
+        searchResultList : searchResultList
     });
 
   } else if (request.user_action == "interactiveSearch") {

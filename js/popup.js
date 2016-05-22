@@ -20,6 +20,8 @@ if (container) {
       // on select suggestion item do
       select: function( event, ui ) {
         searchForAQuery(ui.item.value);
+
+
       },
       minLength: 2,
       //remove results status message
@@ -233,33 +235,38 @@ if (container) {
       },
 
       function(response) {
-        document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
-        var audioLinks = document.querySelectorAll('.results-list .action');
-        var downloadLinks = document.querySelectorAll('.results-list .download');
-        var favoritesLinks = document.querySelectorAll('.results-list .favorite');
-        var titlesLinks = document.querySelectorAll('.results-list .title');
-        var whichSectionClicked = "results-list";
+        if (response.searchResultList.length > 0) {
+          document.getElementById("list-results-list").innerHTML = createAudioLines(response.searchResultList);
+          var audioLinks = document.querySelectorAll('.results-list .action');
+          var downloadLinks = document.querySelectorAll('.results-list .download');
+          var favoritesLinks = document.querySelectorAll('.results-list .favorite');
+          var titlesLinks = document.querySelectorAll('.results-list .title');
+          var whichSectionClicked = "results-list";
 
-        for (var i = 0; i < audioLinks.length; i++) {
-            audioLinks[i].addEventListener('click', function(event) {
-                playPause(this, whichSectionClicked);
-            });
+          for (var i = 0; i < audioLinks.length; i++) {
+              audioLinks[i].addEventListener('click', function(event) {
+                  playPause(this, whichSectionClicked);
+              });
+          }
+
+          for (var i = 0; i < favoritesLinks.length; i++) {
+              favoritesLinks[i].addEventListener('click', function(event) {
+                favoritesListAddRemove(this.getAttribute("fav-id"));
+              });
+          }
+
+          for (var i = 0; i < downloadLinks.length; i++) {
+              downloadLinks[i].addEventListener('click', function(event) {
+                  download(this);
+              });
+          }
+          $(titlesLinks).click(function() {
+            playPause(this, whichSectionClicked);
+          });
+        } else {
+          document.getElementById("results-cover").setAttribute("class", "none");
         }
 
-        for (var i = 0; i < favoritesLinks.length; i++) {
-            favoritesLinks[i].addEventListener('click', function(event) {
-              favoritesListAddRemove(this.getAttribute("fav-id"));
-            });
-        }
-
-        for (var i = 0; i < downloadLinks.length; i++) {
-            downloadLinks[i].addEventListener('click', function(event) {
-                download(this);
-            });
-        }
-        $(titlesLinks).click(function() {
-          playPause(this, whichSectionClicked);
-        });
       }); // end of response
   }  // getSearchResultList function
 
@@ -273,12 +280,16 @@ if (container) {
         user_action: "searchButtonClicked",
         searchQueryValueEncoded: searchQueryValueEncoded
       }, function(response) {
-        var loading = document.getElementById('loading-msg');
-        loading.setAttribute("class", "loading hidden");
-        getSearchResultList();
-        changeFavoriteIconsState();
-        // getFavoritesList();
-        getWhatPlayingNow();
+        document.getElementById('loading-msg').setAttribute("class", "loading hidden");
+        document.getElementById("results-cover").setAttribute("class", "hidden");
+
+        if (response.searchResultList.length > 0) {
+          getSearchResultList();
+          changeFavoriteIconsState();
+          getWhatPlayingNow();
+        }
+
+
       })
     }
   }
