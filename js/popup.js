@@ -8,24 +8,6 @@ if (container) {
     window.open("http://trevx.com/");
   }
 
-
-/*
-  function getGoogleChecks(urls, callback) {
-    var stringUrls = urls.join('\n');
-
-    var googleUrl = 'https://hello.com/' + stringUrls;
-    $.get(googleUrl, function (data) {
-      callback(data);
-    });
-  };
-
-  getGoogleChecks('omardo.com', function (data) {
-    console.log(data);
-  });
-*/
-
-  //Call suggestion API and view the the suggestion list
-  // jQuery onload
   $(function () {
     $("#trevx-search-box").autocomplete({
       source: function (request, response) {
@@ -48,28 +30,6 @@ if (container) {
     })
   });
 
-
-  //not used
-  function trevxSuggetionAPI(){
-      var xhrS = new XMLHttpRequest();
-      var query = document.getElementById("trevx-search-box").value;
-
-      var url = "http://trevx.com/v1/suggestion/" + encodeURIComponent(query) + "/?format=json";
-      xhrS.open("GET", url , false);
-      xhrS.send(null);
-      var suggestionList = xhrS.responseText;
-      var isFoundResult = suggestionList.indexOf("details:Data Returned Successfully");
-
-      if (isFoundResult != -1) {
-        var end = suggestionList.indexOf(",\"details");
-        suggestionList = suggestionList.substring(0, end);
-        suggestionList = suggestionList +"]";
-        suggestionList = JSON.parse(suggestionList);
-      } else {
-        suggestionList = [];
-      }
-      return suggestionList;
-  }
 
   var favoritesList =[];
   function getAudioTitle(title){
@@ -258,35 +218,6 @@ if (container) {
     }, function(response) {
       // getSearchResultList();
     })
-  }
-
-  // not used in this version
-  function checkInteractiveSearch(){
-    // interactiveSearch youtube need to check the API
-    // chrome.tabs.getSelected(null,function(tab) {
-    //   if (tab.url.indexOf("youtube.com/watch?v=") != -1) {
-    //     var searchQueryValueEncoded = encodeURIComponent('https://www.youtube.com/watch?v=YQHsXMglC9A');
-    //     console.log(searchQueryValueEncoded);
-    //     chrome.runtime.sendMessage({
-    //       user_action: "interactiveSearch",
-    //       searchQueryValueEncoded: searchQueryValueEncoded
-    //     }, function(response) {
-    //       getSearchResultList();
-    //     })
-    //   } else {
-    //     // getSearchResultList();
-    //   }
-    // });
-    // try {
-    //   var url = 'http://trevx.com/v1/'+ searchQueryValueEncoded +'/0/40/?format=json'
-    //   var xhr = new XMLHttpRequest();
-    //   xhr.open('GET', url , false);
-    //   xhr.send(null);
-    //   //manipulate json object (it's work, but not the right way, API return unproperate value)
-    //   searchResultList = xhr.response;
-    // } catch (err) {
-    //
-    // } // try end
   }
 
   function download(target) {

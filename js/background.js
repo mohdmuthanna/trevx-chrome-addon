@@ -16,7 +16,22 @@ var appver = '0.3.1';
 chrome.browserAction.setIcon({
   path : "images/welcome.png"
 });
-
+function getFavoritesListFromStorage(){
+  chrome.storage.local.get("favoritesList", function(data) {
+      favoritesList = data["favoritesList"];
+      if (typeof favoritesList === 'undefined') {
+        favoritesList =[];
+      } else {
+        try {
+          var test = favoritesList[0].id;
+        } catch (e) {
+          favoritesList =[];
+        }
+        removeMaliciousLink(favoritesList);
+      }
+    });
+    return favoritesList;
+}
 chrome.storage.local.get("favoritesList", function(data) {
     favoritesList = data["favoritesList"];
     removeMaliciousLink(favoritesList);
@@ -25,6 +40,8 @@ chrome.storage.local.get("searchResultList", function(data) {
     searchResultList = data["searchResultList"];
     removeMaliciousLink(searchResultList);
   });
+
+getFavoritesListFromStorage();
 
 function checkIfFavored(target){
   if (typeof favoritesList === 'undefined') {
@@ -397,28 +414,6 @@ chrome.commands.onCommand.addListener(function(command) {
     }
 });
 });
-
-
-// chrome.omnibox.onInputChanged.addListener(
-//     function(text, suggest)
-//     {
-//         text = text.replace(" ", "");
-
-//         // Add suggestions to an array
-//         var suggestions = [];
-//         // suggestions.push({ content: "http://reddit.com/r/" + text, description: "reddit.com/r/" + text });
-//         suggestions.push({ content: "http://trevx.com/v1/suggestion/hi/?format=json", description: "trevx.com/" + text });
-//
-//         // Set first suggestion as the default suggestion
-//         chrome.omnibox.setDefaultSuggestion({description:suggestions[0].description});
-//
-//         // Remove the first suggestion from the array since we just suggested it
-//         suggestions.shift();
-//
-//         // Suggest the remaining suggestions
-//         suggest(suggestions);
-//     }
-// );
 
 chrome.omnibox.onInputEntered.addListener(
     function(text)
