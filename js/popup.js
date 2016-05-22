@@ -20,8 +20,6 @@ if (container) {
       // on select suggestion item do
       select: function( event, ui ) {
         searchForAQuery(ui.item.value);
-
-
       },
       minLength: 2,
       //remove results status message
@@ -74,8 +72,6 @@ if (container) {
       links = "<p align='center'>Check your internet connection and try again later</p>";
     } else {
       // links = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
-      //the cover will be displayed after first run
-      document.getElementById("results-cover").setAttribute("class", "")
     }
     return (links);
   }; // createAudioLines end
@@ -152,7 +148,6 @@ if (container) {
     chrome.runtime.sendMessage({
       user_action: "getFavoritesList"
       }, function(response) {
-        console.log(response.favoritesList[0] != null);
         if (response.favoritesList[0] != null) {
           favoritesList = response.favoritesList;
           var favoriteIcons = document.querySelectorAll('.favorite');
@@ -264,10 +259,12 @@ if (container) {
             playPause(this, whichSectionClicked);
           });
         } else {
+          // document.getElementById("list-results-list").innerHTML = '99999';
           document.getElementById("results-cover").setAttribute("class", "none");
         }
 
       }); // end of response
+          document.getElementById('trevx-search-box').value = "";
   }  // getSearchResultList function
 
   function searchForAQuery(searchQueryValue){
@@ -287,16 +284,31 @@ if (container) {
           getSearchResultList();
           changeFavoriteIconsState();
           getWhatPlayingNow();
+        } else {
+          var noResMsg = "<li class=\"no-result\">No result found, Start new search or try another word(s)</li>";
+          document.getElementById("list-results-list").innerHTML = noResMsg;
         }
 
 
       })
     }
+    document.getElementById('trevx-search-box').value = "";
+    $("#trevx-search-box").autocomplete( "close" );
   }
+
   document.getElementById('trevx-search-button').onclick = function() {
     var searchQueryValue = document.getElementById('trevx-search-box').value;
     searchForAQuery(searchQueryValue);
   }
+  // on press enter in trevx-search-box
+  $("#trevx-search-box").keypress(function (e) {
+        if (e.keyCode === 13) {
+          var searchQueryValue = document.getElementById('trevx-search-box').value;
+          searchForAQuery(searchQueryValue);
+
+        }
+    });
+
 
   function getWhatPlayingNow(){
     chrome.runtime.sendMessage({
