@@ -1,0 +1,64 @@
+{
+  "name": "Trevx Music Player",
+  "version": "0.3.1",
+  "version_name": "0.3.1",
+  "description": "Instant Music Listening Experience, turn your chrome browser into music player",
+  "background": {
+    "scripts": ["js/jquery-2.2.4.min.js", "js/background.js"]
+  },
+
+  "browser_action": {
+    "default_title": "",
+    "default_popup": "popup.html",
+    "default_icon": "images/welcome.png",
+    "default_popup": "popup.html"
+  },
+
+  "icons": {
+    "16" : "images/64.png",
+    "48" : "images/64.png",
+    "64" : "images/64.png",
+    "128" : "images/64.png"
+  },
+  "omnibox": { "keyword" : "t" },
+  "commands": {
+    "playPause": {
+      "suggested_key": {
+        "windows": "Alt+P",
+        "mac": "Alt+P",
+        "chromeos": "Alt+P",
+        "linux": "Alt+P"
+      },
+      "description": "Play/Pause"
+    },
+    "playNext": {
+      "suggested_key": {
+        "windows": "Alt+N",
+        "mac": "Alt+N",
+        "chromeos": "Alt+N",
+        "linux": "Alt+N"
+      },
+      "description": "Play next"
+    },
+    "palyPrevious": {
+      "suggested_key": {
+        "windows": "Alt+Shift+N",
+        "mac": "Alt+Shift+N",
+        "chromeos": "Alt+Shift+N",
+        "linux": "Alt+Shift+N"
+      },
+      "description": "Play previous"
+    }
+  },
+
+
+  "homepage_url": "http://trevx.com/",
+  "permissions": [
+    "*://trevx.com/*",
+    "https://sb-ssl.google.com/safebrowsing/api/*",
+    "storage",
+    "contextMenus",
+    "activeTab"
+  ],
+  "manifest_version": 2
+}

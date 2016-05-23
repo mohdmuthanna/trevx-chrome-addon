@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="keywords" content="trevx, search, download, play, audio, mp3, music, audio books, sound effects, soundtracks">
+<meta name="description" content="Search and download all types of audio files, you can download music, audio books, sound effects and soundtracks">
+<title>Trevx</title>
+<style>
+body {
+	margin: 0;
+	background-color: #dd4433;
+	font: 16px Arial, Helvetica, sans-serif;
+}
+.wrapper {
+	width: 100%;
+	margin: auto;
+	background-color: #dd4433;
+}
+.header {
+	width: 900px;
+	margin: auto;
+	padding: 20px 0;
+	background-color: #fff;
+	text-align: center;
+}
+.tab {
+	width: 100%;
+	overflow: hidden;
+	padding: 50px 0;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+.tab:hover {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+.tab-list {
+	width: 1200px;
+	margin: auto;
+}
+.tab-list a {
+	width: 16%;
+	float: left;
+	display: block;
+	text-align: center;
+	font: bold 30px Arial, Helvetica, sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.tab a:hover {
+	color: #bbb;
+}
+.content {
+	width: 900px;
+	margin: auto;
+	background-color: #fff;
+}
+.content .block {
+	position: relative;
+	margin: 0 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #dedede;
+}
+.content .block h2 {
+	margin: 0;
+	padding: 20px 0;
+	text-align: center;
+}
+.content .block p {
+	margin-top: 0;
+}
+.content .block .img {
+	text-align: center;
+}
+.content .back-to-top {
+	width: 20px;
+	height: 13px;
+	display: block;
+	position: absolute;
+	top: 25px;
+	right: 0;
+	background: url(images/top.png) no-repeat;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <header class="header">
+    <h1><img src="images/logo.png" alt="trevx"></h1>
+  </header>
+  <section class="tab">
+    <div class="tab-list"> <a href="#block1">UI</a> <a href="#block2">Search</a> <a href="#block3">Favorite</a> <a href="#block4">Play</a> <a href="#block5">Permission</a> <a href="#block6">Shortcuts</a> </div>
+  </section>
+  <section class="content">
+    <div class="block" id="block1">
+      <h2>The User Interface</h2>
+      <p>Trevx music extension starts pretty much empty. You've gotta add some songs to your playlist! Click the search icon to begin adding to your collection.</p>
+      <div class="img"><img src="images/home.jpg" alt="home" width="605" height="462"></div>
+    </div>
+    <div class="block" id="block2"><a href="#" class="back-to-top"></a>
+      <h2>Searching For Songs</h2>
+      <p>Try typing in an artist or song name. Clicking the play button on a result will cause it to begin streaming instantly.</p>
+      <div class="img"><img src="images/search.jpg" alt="home" width="605" height="462"></div>
+    </div>
+    <div class="block" id="block3"><a href="#" class="back-to-top"></a>
+      <h2>Favorite Songs</h2>
+      <p>Start building your music favorite list, Click the heart button to add. Close out of the search window once you've added some music. You're now ready to rock out!</p>
+      <div class="img"><img src="images/favorite.jpg" alt="home" width="605" height="462"></div>
+    </div>
+    <div class="block" id="block4"><a href="#" class="back-to-top"></a>
+      <h2>Playing Songs</h2>
+      <p>Click play to begin playing the first song in your stream. The songs will play in order.</p>
+      <div class="img"><img src="images/play.jpg" alt="home" width="605" height="462"></div>
+    </div>
+    <div class="block" id="block5"><a href="#" class="back-to-top"></a>
+      <h2>Trevx Permission Requests</h2>
+      <p>Trevx take permissions very seriously and we actively working on reducing the number of permissions Trevx requires whenever possible. Thank you for understanding!</p>
+      <div class="img"><img src="images/permission.jpg" alt="home" width="510" height="230"></div>
+      <br>
+      <p><strong>Permission:</strong> "Communicate with cooperating websites" <br>
+        <strong>Explanation:</strong> This simply means that Trevx.com is able to ask the extension if it is installed. If so, the buttons on the website will indicate that you have Trevx installed.<br>
+        <br>
+        <strong>Permission:</strong> "Communicate with Trevx.com website" <br>
+        <strong>Explanation:</strong> This simply means that the extension able to read and change user data on Trevx.com website to perform user’s acticon (search for audio truck and play them).<br>
+        <br>
+        <strong>Permission:</strong> "Google Safe Browsing API" <br>
+        <strong>Explanation:</strong> This simply means that the extension able to read and change user data on https://sb-ssl.google.com/safebrowsing/api/* website to ensure that all retrieved links to the user are safe to open.<br>
+        <br>
+        <strong>Permission:</strong> "Using Chrome Local-Storage API"" <br>
+        <strong>Explanation: </strong>This simply means that the extension can use Chrome Local-Storage API and that make the extension able save data and view it or edit it later.</p>
+    </div>
+    <div class="block" id="block6"><a href="#" class="back-to-top"></a>
+      <h2>Keyboard Shortcuts</h2>
+      <p><strong>Keyboard shortcut Default</strong><br>
+        <br>
+        To increase the accessibility the extension can respond to your action throw keyboard shortcuts. The default shortcuts key is:<br>
+        Alt + N : next song<br>
+        Alt + Shift + N: previous song<br>
+        Alt + P: play or pause<br>
+      </p>
+      <p>Also you can customize trevx extension keyboard shortcuts by accessing this link:(copy this link and paste it in your browser) <br>
+        <em>chrome://extensions/configureCommands</em> </p>
+    </div>
+  </section>
+</div>
+</body>
+</html>

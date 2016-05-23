@@ -222,9 +222,10 @@ function callTrevxAPI(searchQueryValueEncoded){
   } // try end
 
   if (isFoundResult != -1) {
+    var end = searchResultList.indexOf(",\"details");
+    searchResultList = searchResultList.substring(0, end);
+    searchResultList = searchResultList +"]";
     searchResultList = JSON.parse(searchResultList);
-    // Remove details from xhr response 
-    searchResultList = searchResultList.slice(0, searchResultList.length - 7);
     removeRedundentResult();
   } else {
     searchResultList = [];

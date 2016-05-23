@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>&bull; Trevx | search the web for audio and music</title>
+<meta name="description" content="Trevx is an audio search engine where You can search and download all types of audio files, you can download music, audio books, sound effects and soundtracks">
+<meta name="keywords" content="by,vevo,Free songs,download,trending,wav,station,live,Featured,top songs">
+<link href="css/setting.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<div class="trevx-chrome-popup">
+  <div class="header"> <a href="http://trevx.com" class="logo" title="trevx.com"><img src="images/logo.png" alt="Trevx.com" width="64" height="20"></a> <span class="sep"></span>
+    <div class="search">
+      <!-- <form class="" action="" method="post"> -->
+        <span class="remote">
+          <input type="text" dir="auto" id='trevx-search-box' placeholder="Search Trevx" class="field typeahead"
+          data-list="" autocomplete="off" required>
+        </span>
+
+        <input type="submit" id='trevx-search-button' value="" class="submit">
+      <!-- </form> -->
+    </div>
+  </div>
+  <div class="content">
+    <!--
+    <a href="#" class="cover results-cover"><span class="icon search"></span>
+    <h2>Search Results</h2>
+    <p>Dummy text dummy text Dummy text</p>
+    </a>
+      -->
+      <div class="none">
+        <div class='hidden' id='results-cover'>
+          <a href="#" class="cover results-cover"> <span class="icon search"></span>
+            <h2>Search Results</h2>
+            <p>Start a new search and enjoy listening</p>
+          </a>
+        </div>
+        <a id='cover-favorite-cover' class="cover favorite-cover inactiveLink"> <span class="icon favorite"></span>
+        <h2>Favorites List</h2>
+        <p>Favorites List is empty. Start filling the list by clicking heart sign</p>
+        </a>
+      </div>
+
+
+    <div id='trevx-lists'>
+      <ul class="list results-list" id='list-results-list'>
+
+      </ul>
+      <ul class="list favorites-list" id='list-favorites-list'>
+
+      </ul>
+    </div>
+    <div id='loading-msg' class="loading hidden"><img src="images/load.gif" alt="loading" width="64" height="64"></div>
+    <!-- <div class="msg msg1">Check your internet connection, and please try again later.</div> -->
+
+  </div>
+  <div id="suggesstion-box">
+
+  </div>
+</div>
+<script type="text/javascript" src="js/jquery-2.2.4.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+<script type="text/javascript" src="js/popup.js"></script>
+
+
+</body>
+</html>
