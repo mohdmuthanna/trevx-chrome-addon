@@ -323,15 +323,26 @@ if (container) {
       },
 
       function(response) {
-        if (!(response.activeAudio === undefined)) {
+        if (!(typeof response.activeAudio === "undefined")) {
           var whatIsActiveList = response.whatIsActiveList;
           var activeAudio = response.activeAudio;
           if (whatIsActiveList == 'favorites-list') {
             var audioLinks = document.querySelectorAll('#list-favorites-list .action');
-            document.querySelector("li[fav-list-li-id='"+ activeAudio +"']").setAttribute("class", "active-audio");
+            //change background color, and reposition the active-audio
+            var avtiveAudioLi= document.querySelector("li[fav-list-li-id='"+ activeAudio +"']");
+            if (avtiveAudioLi) {
+              $("#list-favorites-list").prepend(avtiveAudioLi);
+              avtiveAudioLi.setAttribute("class", "active-audio");
+            }
+
           } else if (whatIsActiveList == 'results-list') {
             var audioLinks = document.querySelectorAll('#list-results-list .action');
-            document.querySelector("li[res-list-li-id='"+ activeAudio +"']").setAttribute("class", "active-audio");
+            //change background color, and reposition the active-audio
+            var avtiveAudioLi= document.querySelector("li[res-list-li-id='"+ activeAudio +"']");
+            if (avtiveAudioLi) {
+              $("#list-results-list").prepend(avtiveAudioLi);
+              avtiveAudioLi.setAttribute("class", "active-audio");
+            }
           }
 
           if (response.isPlaying) {

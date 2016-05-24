@@ -61,13 +61,14 @@ function checkIfFavored(target){
 }
 
 function addToFavorites(target){
+  // max length should not be more than 250, because google SafeSearch API cant handel more than 500links
+  // and every audio has tow links, image & audio url
   if (favoritesList.length < 249) {
     for (var i = 0; i < searchResultList.length; i++) {
       if (searchResultList[i].id == target) {
         var active = i;
       }
     }
-    // alert(favoritesList.length);
     var element = searchResultList[active];
     favoritesList.push(element);
   } else {
@@ -251,11 +252,11 @@ function getSrcById(id, activeList){
   }
 }
 
+//not used, to be deleted
 function getWhatPlayingNow(){
   if (!(typeof searchResultList === 'undefined')) {
     for (var i = 0; i < activeList.length; i++) {
         if (!l.paused && (activeList[i].id == activeAudio)) {
-          alert(!l.paused);
           return activeAudio;
         }
     }
