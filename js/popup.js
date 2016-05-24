@@ -358,6 +358,21 @@ if (container) {
         })
   } //end of getWhatPlayingNow
 
+  // chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  //   if (request.user_action == "getSearchResultList") {
+  //     sendResponse({
+  //         searchResultList: searchResultList
+  //   });
+  // });
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.reloadPopup) {
+      getSearchResultList();
+      changeFavoriteIconsState();
+      getFavoritesList();
+      getWhatPlayingNow();
+    }
+  });
+
   window.onload = function() {
     getSearchResultList();
     changeFavoriteIconsState();

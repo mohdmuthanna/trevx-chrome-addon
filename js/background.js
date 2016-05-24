@@ -99,7 +99,7 @@ function playNextAudio(){
     activeAudio = listAsPlaylist[activeAudioPosition+1];
     l.play();
   }
-
+  chrome.runtime.sendMessage({reloadPopup: true});
 } //playNextAudio
 
 function playPreviousAudio(){
