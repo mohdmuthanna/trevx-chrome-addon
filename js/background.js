@@ -61,13 +61,19 @@ function checkIfFavored(target){
 }
 
 function addToFavorites(target){
-  for (var i = 0; i < searchResultList.length; i++) {
-    if (searchResultList[i].id == target) {
-      var active = i;
+  if (favoritesList.length < 249) {
+    for (var i = 0; i < searchResultList.length; i++) {
+      if (searchResultList[i].id == target) {
+        var active = i;
+      }
     }
+    // alert(favoritesList.length);
+    var element = searchResultList[active];
+    favoritesList.push(element);
+  } else {
+    alert("Sorry, your favorites list is full, remove some items and the try add new item");
   }
-  var element = searchResultList[active];
-  favoritesList.push(element);
+
 } // add to favorite
 
 function removeFromFavorites(target){
@@ -223,7 +229,7 @@ function callTrevxAPI(searchQueryValueEncoded){
 
   if (isFoundResult != -1) {
     searchResultList = JSON.parse(searchResultList);
-    // Remove details from xhr response 
+    // Remove details from xhr response
     searchResultList = searchResultList.slice(0, searchResultList.length - 7);
     removeRedundentResult();
   } else {
@@ -249,6 +255,7 @@ function getWhatPlayingNow(){
   if (!(typeof searchResultList === 'undefined')) {
     for (var i = 0; i < activeList.length; i++) {
         if (!l.paused && (activeList[i].id == activeAudio)) {
+          alert(!l.paused);
           return activeAudio;
         }
     }
@@ -257,10 +264,6 @@ function getWhatPlayingNow(){
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.user_action == "getSearchResultList") {
-    chrome.storage.local.get("searchResultList", function(data) {
-        searchResultList = data["searchResultList"];
-      });
-        // makeListAsPlaylist(searchResultList);
     sendResponse({
         searchResultList: searchResultList
     });
@@ -301,7 +304,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   else if (request.user_action == 'getWhatPlayingNow') {
     sendResponse({
       whatIsActiveList: whatIsActiveList,
-        activeAudio: getWhatPlayingNow()
+      activeAudio: activeAudio,
+      isPlaying: !l.paused
+
     });
     return true;
   }

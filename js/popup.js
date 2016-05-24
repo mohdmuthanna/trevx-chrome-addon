@@ -51,7 +51,7 @@ if (container) {
     if (!(searchResultList === undefined)) {
       if (searchResultList.length > 0) {
         for (var i = 0; i < searchResultList.length; i++) {
-          links +="<li>"
+          links +="<li res-list-li-id="+ searchResultList[i].id +">"
                     // + "<a class='action play' id='"+searchResultList[i].id+"'  href="+ searchResultList[i].link +"></a>"
                     + "<a class='action' id='"+searchResultList[i].id+"'href='#'>"
                     +   "<img src='"+ getAudioImage(searchResultList[i].image) +"' width='40' height='40'>"
@@ -84,7 +84,7 @@ if (container) {
       if (favoritesList.length > 0) {
             toChange.setAttribute("style", "visibility: hidden");
         for (var i = 0; i < favoritesList.length; i++) {
-          links +="<li>"
+          links +="<li fav-list-li-id="+ favoritesList[i].id +">"
                   +"<a class='action' id='"+favoritesList[i].id+"'href='#'>"
                   +   "<img src='"+ getAudioImage(favoritesList[i].image) +"' width='40' height='40'>"
                   +   "<span fav-list-icon-id='"+favoritesList[i].id+"' class='icon play'></span>"
@@ -177,18 +177,25 @@ if (container) {
         // get clicked button and change its state[play, pause
         if (whichSectionClicked == "results-list") {
           var toChange = document.querySelector("span[res-list-icon-id='"+ response.activeAudio +"']");
+          var activeAudioBackground = document.querySelector("li[res-list-li-id='"+ response.activeAudio +"']");
         } else if (whichSectionClicked == "favorites-list") {
           var toChange = document.querySelector("span[fav-list-icon-id='"+ response.activeAudio +"']");
+          var activeAudioBackground = document.querySelector("li[fav-list-li-id='"+ response.activeAudio +"']");
         }
 
         var icons = document.querySelectorAll("div#trevx-lists .icon");
+        $("div#trevx-lists li").removeClass("active-audio");
+        activeAudioBackground.setAttribute("class", "active-audio");
         if (response.isPlaying){
           for (var i = 0; i < icons.length; i++) {
             icons[i].setAttribute("class", "icon play");
+            // activeAudioBackground.setAttribute("class", "");
           }
           toChange.setAttribute("class", "icon pause");
+          // activeAudioBackground.setAttribute("class", "active-audio");
         } else {
           toChange.setAttribute("class", "icon play");
+          // activeAudioBackground.setAttribute("class", "");
         }
       })
   }; // end of playPause function
@@ -318,17 +325,24 @@ if (container) {
       function(response) {
         if (!(response.activeAudio === undefined)) {
           var whatIsActiveList = response.whatIsActiveList;
+          var activeAudio = response.activeAudio;
           if (whatIsActiveList == 'favorites-list') {
             var audioLinks = document.querySelectorAll('#list-favorites-list .action');
+            document.querySelector("li[fav-list-li-id='"+ activeAudio +"']").setAttribute("class", "active-audio");
           } else if (whatIsActiveList == 'results-list') {
             var audioLinks = document.querySelectorAll('#list-results-list .action');
+            document.querySelector("li[res-list-li-id='"+ activeAudio +"']").setAttribute("class", "active-audio");
           }
-          var activeAudio = response.activeAudio;
-          for (var i = 0; i < audioLinks.length; i++) {
-            if (audioLinks[i].id == activeAudio) {
-              audioLinks[i].childNodes[1].setAttribute("class", "icon pause");
+
+          if (response.isPlaying) {
+            for (var i = 0; i < audioLinks.length; i++) {
+              if (audioLinks[i].id == activeAudio) {
+                audioLinks[i].childNodes[1].setAttribute("class", "icon pause");
+                // audioLinks[i].parentElement.setAttribute("class", "active-audio");
+              }
             }
           }
+
         }
         })
   } //end of getWhatPlayingNow

@@ -251,14 +251,14 @@ input:-webkit-autofill {
    cursor: default;
 }*/
 
+/*Added by mohd.muthanna*/
 .hidden {
 	display: none;
 }
 
-
-
-/*Added by mohd.muthanna*/
-
+.active-audio {
+	background-color: #D6F9C7;
+}
 .results-list li .title:hover, .favorites-list li .title:hover{
 	cursor:pointer;
 }
