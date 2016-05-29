@@ -41,15 +41,16 @@ body {
 .header .search {
 	float: left;
 }
+/*[New]:*/
 .header .search input[type='text'] {
-	width: 455px;
-	height: 20px;
-	float: left;
-	padding: 5px 0;
-	border: 0 none;
-	outline: none;
-	background: none;
-	color: #fff;
+width: 445px;
+height: 20px;
+float: left;
+padding: 5px 10px 5px 0;
+border: 0 none;
+outline: none;
+background: none;
+color: #fff;
 }
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #dd4433 inset;
@@ -257,27 +258,32 @@ input:-webkit-autofill {
 }
 
 .active-audio {
-	background-color: #D6F9C7;
+	background-color: #DFFFD0;
 }
 .results-list li .title:hover, .favorites-list li .title:hover{
 	cursor:pointer;
 }
 
 .ui-autocomplete{
+	padding: 0;
+	border: 1px solid #bebebe;
+	border-width: 0 1px 1px;
+	z-index: 999999;
 	position: absolute;
-	top: 24px;
-	left: 106px;
-	width: 270px;
-	background-color: rgb(255, 255, 255);
-}
-
-.ui-menu-item {
-	/*position: relative;*/
+	top: 34px !important;
+	left: 90px !important;
+	background-color: #fff;
 	list-style-type: none;
-	max-width: 270px;
-	 /*z-index: 3;*/
 }
-
+.ui-autocomplete li{
+	display: block;
+	padding: 5px 10px;
+	border-left:3px solid #fff;
+}
+.ui-autocomplete li:hover{
+	background-color:#ededed;
+	border-left:3px solid #d43;
+}
 .ui-state-focus
 {
     background:#dedede;
